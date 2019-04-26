@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.Display
 import android.view.View
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -17,6 +18,28 @@ class MainActivity : AppCompatActivity() {
         var display = getWindowManager().getDefaultDisplay();
         var dm = DisplayMetrics();
         display.getMetrics(dm);
+
+
+
+
+        newGameButton.setOnClickListener {
+            // it.visibility = View.INVISIBLE
+            // memoryViewModel.newGame();
+
+
+            Toast.makeText(this, "Clicked", Toast.LENGTH_SHORT).show();
+            // setResult(Result(33, bestTime = 12345))
+
+        }
+
+    }
+
+    fun setResult(result: Result) {
+        bestMovesValue.setText(result.bestMoves.toString())
+        bestTimeValue.setText(result.bestTimeInSeconds())
+        currentMovesValue.setText(result.currentMoves.toString())
+        currentTimeValue.setText(result.currentTimeInSeconds())
+
     }
 
 }
