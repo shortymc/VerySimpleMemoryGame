@@ -18,4 +18,8 @@ class Result(val bestMoves: Int, val bestTime: Long) {
     fun increaseCurrentMoves() {
         currentMoves++
     }
+
+    fun increaseSolved() {
+        solved++;
+    }
 }

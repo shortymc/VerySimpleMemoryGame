@@ -43,7 +43,7 @@ public class Result {
     public int getSolved() {
         return solved;
     }
-    
+
 
     public void increaseSolved() {
         solved++;

@@ -16,6 +16,7 @@ class MemoryGame {
     internal val FIELD_ROWS = 4
     internal val FIELD_COLS = 4
     internal val FIELDS_NUMBER = 16
+    val ALL_SOLVED = 8
 
     internal var opened1: Int = 0
     internal var opened2: Int = 0
@@ -28,7 +29,7 @@ class MemoryGame {
     private val stopwatch = object : Runnable {
         override fun run() {
             currentTime = SystemClock.uptimeMillis() - startTime
-            memoryResult.getValue()!!.currentTime=currentTime
+            memoryResult.getValue()!!.currentTime = currentTime
             memoryResult.setValue(memoryResult.getValue())
             handler.postDelayed(this, 0)
         }
@@ -79,12 +80,12 @@ class MemoryGame {
             when (opened) {
                 1 -> {
                     opened1 = id
-                    memoryList.value!![opened1].isOpen=true
+                    memoryList.value!![opened1].isOpen = true
                     opened2 = -1
                 }
                 2 -> {
                     opened2 = id
-                    memoryList.value!![opened2].isOpen=true
+                    memoryList.value!![opened2].isOpen = true
                 }
             }
             memoryList.setValue(memoryList.value)
@@ -94,34 +95,25 @@ class MemoryGame {
 
     internal fun closeOpened() {
         opened = 0
-        memoryList.value!![opened1].isOpen=false
-        memoryList.value!![opened2].isOpen=false
+        memoryList.value!![opened1].isOpen = false
+        memoryList.value!![opened2].isOpen = false
         opened1 = -1
         opened2 = -1
         memoryList.setValue(memoryList.value)
     }
 
-    fun checkIsSolved(): Boolean {
+    fun checkIsSolved(): Int {
         memoryResult.getValue()!!.increaseCurrentMoves()
-        memoryResult.setValue(memoryResult.getValue())
-        if (memoryList.value!![opened1].item === memoryList.getValue()!!.get(opened2).item) {
-            memoryList.value!![opened1].isSolved=true
-            memoryList.value!![opened2].isSolved=true
+        if (memoryList.value!![opened1].item == memoryList.getValue()!!.get(opened2).item) {
+            memoryList.value!![opened1].isSolved = true
+            memoryList.value!![opened2].isSolved = true
             memoryList.setValue(memoryList.value)
-            return true
-        } else {
-            return false
+            memoryResult.value!!.increaseSolved()
         }
-
+        memoryResult.setValue(memoryResult.value)
+        return memoryResult.value!!.solved
     }
 
-    internal fun ifAllSolved(): Boolean {
-        var allSolved = true
-        for (f in memoryList.value!!) {
-            allSolved = allSolved && f.isSolved
-        }
-        return allSolved
-    }
 
     internal fun stopStopwatch() {
         handler.removeCallbacks(stopwatch)

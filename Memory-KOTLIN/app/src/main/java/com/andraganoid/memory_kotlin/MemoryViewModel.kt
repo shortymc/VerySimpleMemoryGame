@@ -38,22 +38,17 @@ class MemoryViewModel(application: Application) : AndroidViewModel(application) 
 
             if (mGame.whatIsOpen(id) == 2) {
 
-                if (mGame.checkIsSolved()) {
-                    if (mGame.ifAllSolved()) {
+                if (mGame.checkIsSolved()==mGame.ALL_SOLVED) {
                         mGame.stopStopwatch()
                         if (mGame.memoryResult.getValue()!!.currentMoves < prefs.getInt("bestMoves", 100)) {
-                            prefs.edit().putInt("bestMoves", mGame.memoryResult.getValue()!!.currentMoves).commit()
+                            prefs.edit().putInt("bestMoves", mGame.memoryResult.getValue()!!.currentMoves).apply()
                             Toast.makeText(getApplication(), "NEW BEST MOVES!", Toast.LENGTH_LONG).show()
                         }
                         if (mGame.currentTime < prefs.getLong("bestTime", 1000 * 1000L)) {
-                            prefs.edit().putLong("bestTime", mGame.currentTime).commit()
+                            prefs.edit().putLong("bestTime", mGame.currentTime).apply()
                             Toast.makeText(getApplication(), "NEW BEST TIME!", Toast.LENGTH_LONG).show()
                         }
                         Toast.makeText(getApplication(), "GAME OVER", Toast.LENGTH_LONG).show()
-                       // newGameBtn.setVisibility(View.VISIBLE)
-
-
-                    }
                 } else {
                     canOpenField = false
                     object : CountDownTimer(1000, 1000) {
