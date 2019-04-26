@@ -7,10 +7,9 @@ Point is not the game itself but showing the possibility of using different tech
 
 I have the intention to make this classic and simple game using:
 
-- Java
-- Kotlin
+- Java DONE
+- Kotlin DONE
 - Cordova
 - React Native
 - Flutter
 
-For now, Java version is finnished.
