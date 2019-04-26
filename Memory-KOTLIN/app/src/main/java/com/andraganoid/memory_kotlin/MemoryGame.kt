@@ -10,7 +10,6 @@ class MemoryGame {
 
     internal var memoryList: MutableLiveData<List<Field>>
     internal lateinit var memoryResult: MutableLiveData<Result>
-
     internal var mList: MutableList<Field> = ArrayList()
     internal var randFields: MutableList<Int> = ArrayList()
     internal val FIELD_ROWS = 4
