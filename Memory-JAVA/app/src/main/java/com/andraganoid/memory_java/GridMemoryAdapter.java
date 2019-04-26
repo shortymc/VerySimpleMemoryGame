@@ -24,6 +24,7 @@ public class GridMemoryAdapter extends BaseAdapter {
     ImageView back;
     int itemHeight;
     Field currentField;
+    
 
     public GridMemoryAdapter(Context context, int itemHeight) {
         this.context = context;

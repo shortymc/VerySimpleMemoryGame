@@ -48,4 +48,5 @@ public class Result {
     public void increaseSolved() {
         solved++;
     }
+
 }
