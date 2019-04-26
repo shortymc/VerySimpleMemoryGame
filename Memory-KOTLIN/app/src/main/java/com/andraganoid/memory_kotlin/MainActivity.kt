@@ -15,11 +15,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         newGameButton.visibility = View.VISIBLE;
-        var display = getWindowManager().getDefaultDisplay();
+        var display = getWindowManager().getDefaultDisplay()
         var dm = DisplayMetrics();
         display.getMetrics(dm);
 
-
+        val mAdapter = GridMemoryAdapter(this, (dm.heightPixels * .12).toInt())
+        fieldsGridView.adapter = mAdapter
 
 
         newGameButton.setOnClickListener {
@@ -39,7 +40,6 @@ class MainActivity : AppCompatActivity() {
         bestTimeValue.setText(result.bestTimeInSeconds())
         currentMovesValue.setText(result.currentMoves.toString())
         currentTimeValue.setText(result.currentTimeInSeconds())
-
     }
 
 }

@@ -10,6 +10,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +58,7 @@ public class GridMemoryAdapter extends BaseAdapter {
         currentField = fList.get(position);
         item.setText(String.valueOf(currentField.getItem()));
         if (currentField.isSolved()) {
-            item.setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
+            item.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
         }
 
         if (currentField.isOpen() || currentField.isSolved()) {

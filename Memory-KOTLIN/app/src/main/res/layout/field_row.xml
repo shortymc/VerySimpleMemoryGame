@@ -7,14 +7,14 @@
     android:padding="2dp">
 
     <TextView
-        android:id="@+id/field_item"
+        android:id="@+id/fieldItem"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center" />
 
     <ImageView
 
-        android:id="@+id/field_back_img"
+        android:id="@+id/fieldBackImg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/andraganoid"
