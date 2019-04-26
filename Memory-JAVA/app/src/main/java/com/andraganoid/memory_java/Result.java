@@ -6,12 +6,14 @@ public class Result {
     private int bestMoves;
     private long currentTime;
     private long bestTime;
+    private int solved;
 
-    public Result(int cm, int bm, long ct, long bt) {
-        this.currentMoves = cm;
+    public Result(int bm, long bt) {
         this.bestMoves = bm;
-        this.currentTime = ct;
         this.bestTime = bt;
+        this.currentMoves = 0;
+        this.currentTime = 0;
+        this.solved = 0;
     }
 
     public int getCurrentMoves() {
@@ -36,5 +38,17 @@ public class Result {
 
     public void increaseCurrentMoves() {
         currentMoves++;
+    }
+
+    public int getSolved() {
+        return solved;
+    }
+
+    public void setSolved(int solved) {
+        this.solved = solved;
+    }
+
+    public void increaseSolved() {
+        solved++;
     }
 }

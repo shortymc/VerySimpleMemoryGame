@@ -11,14 +11,15 @@ import java.util.List;
 
 public class MemoryGame {
 
-    MutableLiveData <List <Field>> memoryList;
-    MutableLiveData <Result> memoryResult;
+    MutableLiveData<List<Field>> memoryList;
+    MutableLiveData<Result> memoryResult;
 
-    List <Field> mList = new ArrayList <>();
-    List <Integer> randFields = new ArrayList <>();
+    List<Field> mList = new ArrayList<>();
+    List<Integer> randFields = new ArrayList<>();
     final int FIELD_ROWS = 4;
     final int FIELD_COLS = 4;
     final int FIELDS_NUMBER = 16;
+    final static int ALL_SOLVED = 8;
 
     int opened1, opened2, opened;
 
@@ -27,8 +28,8 @@ public class MemoryGame {
 
 
     public MemoryGame() {
-        memoryList = new MutableLiveData <>();
-        memoryResult = new MutableLiveData <>();
+        memoryList = new MutableLiveData<>();
+        memoryResult = new MutableLiveData<>();
         handler = new Handler();
     }
 
@@ -58,7 +59,7 @@ public class MemoryGame {
         }
 
         memoryList.setValue(mList);
-        memoryResult.setValue(new Result(0, bestMoves, 0L, bestTime));
+        memoryResult.setValue(new Result(bestMoves, bestTime));
         currentTime = 0;
         startTime = SystemClock.uptimeMillis();
         handler.postDelayed(stopwatch, 0);
@@ -93,27 +94,20 @@ public class MemoryGame {
         memoryList.setValue(memoryList.getValue());
     }
 
-    public boolean checkIsSolved() {
+
+    public int checkIsSolved() {
         memoryResult.getValue().increaseCurrentMoves();
-        memoryResult.setValue(memoryResult.getValue());
         if (memoryList.getValue().get(opened1).getItem() == memoryList.getValue().get(opened2).getItem()) {
             memoryList.getValue().get(opened1).setSolved(true);
             memoryList.getValue().get(opened2).setSolved(true);
             memoryList.setValue(memoryList.getValue());
-            return true;
-        } else {
-            return false;
+            memoryResult.getValue().increaseSolved();
         }
+        memoryResult.setValue(memoryResult.getValue());
+        return memoryResult.getValue().getSolved();
 
     }
 
-    boolean ifAllSolved() {
-        boolean allSolved = true;
-        for (Field f : memoryList.getValue()) {
-            allSolved = allSolved && f.isSolved();
-        }
-        return allSolved;
-    }
 
     private Runnable stopwatch = new Runnable() {
         public void run() {

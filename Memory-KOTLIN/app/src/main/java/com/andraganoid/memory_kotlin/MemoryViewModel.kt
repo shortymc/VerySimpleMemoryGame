@@ -52,6 +52,7 @@ class MemoryViewModel(application: Application) : AndroidViewModel(application) 
                         }
                         Toast.makeText(getApplication(), "GAME OVER", Toast.LENGTH_LONG).show()
                        // newGameBtn.setVisibility(View.VISIBLE)
+                       
 
                     }
                 } else {

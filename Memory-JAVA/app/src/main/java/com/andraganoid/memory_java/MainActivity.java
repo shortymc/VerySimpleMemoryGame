@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import static com.andraganoid.memory_java.MemoryGame.ALL_SOLVED;
+
 public class MainActivity extends AppCompatActivity {
 
     MemoryViewModel memoryViewModel;
@@ -44,14 +46,14 @@ public class MainActivity extends AppCompatActivity {
         memoGridView.setAdapter(mAdapter);
 
         memoryViewModel = ViewModelProviders.of(this).get(MemoryViewModel.class);
-        memoryViewModel.getMemoryList().observe(this, new Observer <List <Field>>() {
+        memoryViewModel.getMemoryList().observe(this, new Observer<List<Field>>() {
             @Override
-            public void onChanged(List <Field> fields) {
+            public void onChanged(List<Field> fields) {
                 mAdapter.setFields(fields);
             }
         });
 
-        memoryViewModel.getMemoryResults().observe(this, new Observer <Result>() {
+        memoryViewModel.getMemoryResults().observe(this, new Observer<Result>() {
             @Override
             public void onChanged(Result result) {
                 setResults(result);
@@ -60,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
         memoGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView <?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 memoryViewModel.fieldClicked(position);
             }
         });
@@ -79,6 +81,9 @@ public class MainActivity extends AppCompatActivity {
         bestTime.setText(result.getBestTimeInSeconds());
         currentMoves.setText(String.valueOf(result.getCurrentMoves()));
         currentTime.setText(result.getCurrentTimeInSeconds());
+        if (result.getSolved() == ALL_SOLVED) {
+            newGameBtn.setVisibility(View.VISIBLE);
+        }
     }
 
     public void setNewGame(View v) {

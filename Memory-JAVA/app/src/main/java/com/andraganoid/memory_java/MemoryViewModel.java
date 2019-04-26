@@ -29,11 +29,11 @@ public class MemoryViewModel extends AndroidViewModel {
         canOpenField = true;
     }
 
-    public LiveData <List <Field>> getMemoryList() {
+    public LiveData<List<Field>> getMemoryList() {
         return mGame.memoryList;
     }
 
-    public LiveData <Result> getMemoryResults() {
+    public LiveData<Result> getMemoryResults() {
         return mGame.memoryResult;
     }
 
@@ -47,21 +47,17 @@ public class MemoryViewModel extends AndroidViewModel {
 
             if (mGame.whatIsOpen(id) == 2) {
 
-                if (mGame.checkIsSolved()) {
-                    if (mGame.ifAllSolved()) {
-                        mGame.stopStopwatch();
-                        if (mGame.memoryResult.getValue().getCurrentMoves() < prefs.getInt("bestMoves", 100)) {
-                            prefs.edit().putInt("bestMoves", mGame.memoryResult.getValue().getCurrentMoves()).commit();
-                            Toast.makeText(getApplication(), "NEW BEST MOVES!", Toast.LENGTH_LONG).show();
-                        }
-                        if (mGame.currentTime < prefs.getLong("bestTime", 1000 * 1000L)) {
-                            prefs.edit().putLong("bestTime", mGame.currentTime).commit();
-                            Toast.makeText(getApplication(), "NEW BEST TIME!", Toast.LENGTH_LONG).show();
-                        }
-                        Toast.makeText(getApplication(), "GAME OVER", Toast.LENGTH_LONG).show();
-                        newGameBtn.setVisibility(View.VISIBLE);
-
+                if (mGame.checkIsSolved() == MemoryGame.ALL_SOLVED) {
+                    mGame.stopStopwatch();
+                    if (mGame.memoryResult.getValue().getCurrentMoves() < prefs.getInt("bestMoves", 100)) {
+                        prefs.edit().putInt("bestMoves", mGame.memoryResult.getValue().getCurrentMoves()).apply();
+                        Toast.makeText(getApplication(), "NEW BEST MOVES!", Toast.LENGTH_LONG).show();
                     }
+                    if (mGame.currentTime < prefs.getLong("bestTime", 1000 * 1000L)) {
+                        prefs.edit().putLong("bestTime", mGame.currentTime).apply();
+                        Toast.makeText(getApplication(), "NEW BEST TIME!", Toast.LENGTH_LONG).show();
+                    }
+                    Toast.makeText(getApplication(), "GAME OVER", Toast.LENGTH_LONG).show();
                 } else {
                     canOpenField = false;
                     new CountDownTimer(1000, 1000) {
@@ -74,7 +70,7 @@ public class MemoryViewModel extends AndroidViewModel {
                             canOpenField = true;
                             mGame.closeOpened();
                         }
-                }.start();
+                    }.start();
                 }
             }
         }
