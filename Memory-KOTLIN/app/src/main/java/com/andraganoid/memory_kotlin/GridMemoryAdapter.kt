@@ -11,40 +11,24 @@ import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.field_row.view.*
 import java.util.ArrayList
 
-//
-//class GridMemoryAdapter: BaseAdapter() {
-//    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//    }
-//
-//    override fun getItem(position: Int): Any {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//    }
-//
-//    override fun getItemId(position: Int): Long {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//    }
-//
-//    override fun getCount(): Int {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//    }
-//}
+
 
 class GridMemoryAdapter(internal val context: Context, internal val itemHeight: Int) : BaseAdapter() {
-    internal var fList: List<Field> = listOf();
-    internal var inflater: LayoutInflater
+    internal var fList: List<Field> = listOf()
+  //  internal var inflater: LayoutInflater
 //    internal var item: TextView
 //    internal var back: ImageView
 //    internal var currentField: Field
 
     init {
-        inflater = LayoutInflater.from(context)
-        setFields(null)
+
+       // inflater = LayoutInflater.from(context)
+       setFields(fList)
     }
 
     override fun getCount(): Int {
 
-        // return  fList?.size ?: 0;
+       //  return  fList?.size ?: 0;
         return fList.size
     }
 
@@ -56,12 +40,24 @@ class GridMemoryAdapter(internal val context: Context, internal val itemHeight: 
         return 0
     }
 
-    override fun getView(position: Int, view: View, parent: ViewGroup): View {
-        // var view = view
-        var view = inflater.inflate(R.layout.field_row, parent, false)
-        view.layoutParams = AbsListView.LayoutParams(GridView.AUTO_FIT, itemHeight)
-        val item = view.fieldItem;
-        val back = view.fieldBackImg;
+    override fun getView(position: Int, view: View?, parent: ViewGroup?): View {
+
+
+
+
+//
+//
+//
+  //  var
+//
+//      //  var inflater :LayoutInflater
+//        var inflator = context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+//        var view = inflator.inflate(R.layout.field_row, null)
+//
+          val  gView  = LayoutInflater.from(context).inflate(R.layout.field_row, parent, false)
+        gView.layoutParams = AbsListView.LayoutParams(GridView.AUTO_FIT, itemHeight)
+        val item = gView.fieldItem;
+        val back = gView.fieldBackImg;
         item.setTextSize(TypedValue.COMPLEX_UNIT_PX, (itemHeight / 2).toFloat())
 
         val currentField = fList[position]
@@ -78,21 +74,21 @@ class GridMemoryAdapter(internal val context: Context, internal val itemHeight: 
             back.visibility = View.VISIBLE
         }
 
-        return view
+        return gView
     }
 
-    fun setFields(lf: List<Field>?) {
+    fun setFields(lf: List<Field>) {
+//        fList = if (lf != null) lf else {
+//            listOf()
+//        }
 
-        fList = if (lf != null) lf else {
-            listOf()
-        }
-
+        fList=lf;
+notifyDataSetChanged()
 
 //        if (lf != null) {
 //            fList = lf
 //        } else {
-//            fList.clear()
+//            null
 //        }
-        notifyDataSetChanged()
     }
 }

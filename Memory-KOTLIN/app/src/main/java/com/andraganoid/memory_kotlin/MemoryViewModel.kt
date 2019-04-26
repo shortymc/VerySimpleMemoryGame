@@ -1,0 +1,75 @@
+package com.andraganoid.memory_kotlin
+
+import android.app.Application
+import android.content.SharedPreferences
+import android.os.CountDownTimer
+import android.preference.PreferenceManager
+import android.view.View
+import android.widget.Toast
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+
+
+class MemoryViewModel(application: Application) : AndroidViewModel(application) {
+
+    internal var mGame: MemoryGame
+    internal var prefs: SharedPreferences
+    internal var canOpenField: Boolean = false
+
+    val memoryList: LiveData<List<Field>>
+        get() = mGame.memoryList
+
+    val memoryResults: LiveData<Result>
+        get() = mGame.memoryResult
+
+
+    init {
+        mGame = MemoryGame()
+        prefs = PreferenceManager.getDefaultSharedPreferences(application)
+        canOpenField = true
+    }
+
+    internal fun newGame() {
+        mGame.initFields(prefs.getInt("bestMoves", 100), prefs.getLong("bestTime", 1000 * 1000L))
+    }
+
+    fun fieldClicked(id: Int) {
+
+        if (canOpenField) {
+
+            if (mGame.whatIsOpen(id) == 2) {
+
+                if (mGame.checkIsSolved()) {
+                    if (mGame.ifAllSolved()) {
+                        mGame.stopStopwatch()
+                        if (mGame.memoryResult.getValue()!!.currentMoves < prefs.getInt("bestMoves", 100)) {
+                            prefs.edit().putInt("bestMoves", mGame.memoryResult.getValue()!!.currentMoves).commit()
+                            Toast.makeText(getApplication(), "NEW BEST MOVES!", Toast.LENGTH_LONG).show()
+                        }
+                        if (mGame.currentTime < prefs.getLong("bestTime", 1000 * 1000L)) {
+                            prefs.edit().putLong("bestTime", mGame.currentTime).commit()
+                            Toast.makeText(getApplication(), "NEW BEST TIME!", Toast.LENGTH_LONG).show()
+                        }
+                        Toast.makeText(getApplication(), "GAME OVER", Toast.LENGTH_LONG).show()
+                       // newGameBtn.setVisibility(View.VISIBLE)
+
+                    }
+                } else {
+                    canOpenField = false
+                    object : CountDownTimer(1000, 1000) {
+                        override fun onTick(millisUntilFinished: Long) {}
+
+                        override fun onFinish() {
+                            canOpenField = true
+                            mGame.closeOpened()
+                        }
+                    }.start()
+                }
+            }
+        }
+    }
+
+    internal fun stopTimer() {
+        mGame.stopStopwatch()
+    }
+}
