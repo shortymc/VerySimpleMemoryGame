@@ -43,10 +43,7 @@ public class Result {
     public int getSolved() {
         return solved;
     }
-
-    public void setSolved(int solved) {
-        this.solved = solved;
-    }
+    
 
     public void increaseSolved() {
         solved++;

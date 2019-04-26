@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.SharedPreferences
 import android.os.CountDownTimer
 import android.preference.PreferenceManager
-import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -52,7 +51,7 @@ class MemoryViewModel(application: Application) : AndroidViewModel(application) 
                         }
                         Toast.makeText(getApplication(), "GAME OVER", Toast.LENGTH_LONG).show()
                        // newGameBtn.setVisibility(View.VISIBLE)
-                       
+
 
                     }
                 } else {
