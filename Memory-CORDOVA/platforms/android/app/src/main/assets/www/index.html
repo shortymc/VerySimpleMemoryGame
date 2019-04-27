@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Memory-CORDOVA</title>
+        <link rel="stylesheet" type="text/css" href="memory.css">
+        <script src="cordova.js"></script>
+        <script src ="memory.js"></script>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+
+        <div>
+            <p class="text"> Best moves: </p>
+            <p class="text" id="best_moves">123</p> 
+        </div>   
+        <div>
+            <p class="text"> Best time: </p>
+            <p class="text" id="best_time">456</p>
+        </div>   
+
+
+        <div class="memory_table">
+
+            <table>
+                <tr>
+                    <td id="item_0"><img id="img_0"></td>
+                    <td id="item_1"><img id="img_1"></td>
+                    <td id="item_2"><img id="img_2"></td>
+                    <td id="item_3"><img id="img_3"></td>
+                </tr>
+                <tr>
+                    <td id="item_4"><img id="img_4"></td>
+                    <td id="item_5"><img id="img_5"></td>
+                    <td id="item_6"><img id="img_6"></td>
+                    <td id="item_7"><img id="img_7"></td>
+                </tr>
+                <tr>
+                    <td id="item_8"><img id="img_8"></td>
+                    <td id="item_9"><img id="img_9"></td>
+                    <td id="item_10"><img id="img_10"></td>
+                    <td id="item_11"><img id="img_11"></td>
+                </tr>
+                <tr>
+                    <td id="item_12"><img id="img_12"></td>
+                    <td id="item_13"><img id="img_13"></td>
+                    <td id="item_14"><img id="img_14"></td>
+                    <td id="item_15"><img id="img_15"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div>
+            <p class="text"> Current moves: </p>
+            <p class="text" id="current_moves">123</p> 
+        </div>   
+        <div>
+            <p class="text"> Current time: </p>
+            <p class="text" id="current_time">456</p>
+        </div>  
+
+        <button id="new_game_btn">New Game</button>
+
+
+
+
+        <script>
+            document.addEventListener('deviceready', onDeviceReady);
+            function onDeviceReady() {
+                memoryStart();
+            }
+        </script>
+    </body>
+</html>
