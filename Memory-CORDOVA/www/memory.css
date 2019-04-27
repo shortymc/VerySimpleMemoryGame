@@ -19,7 +19,8 @@ td{
     border-collapse: collapse;
     border-radius: .5em;
     text-align: center;
-    font-size: 3em
+    font-size: 3em;
+    width: 20vw;
 }
 
 td img{
@@ -29,8 +30,11 @@ td img{
 
 #new_game_btn{
     width: 96vw;
-    height: 10vh;
-    background-color: cadetblue
+    height: 9vh;
+    background-color: cadetblue;
+         font-size: 1.2em;
 }
+
+
 
 
