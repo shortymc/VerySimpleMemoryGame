@@ -9,7 +9,7 @@ I have the intention to make this classic and simple game using:
 
 - Java DONE
 - Kotlin DONE
-- Cordova
+- Cordova DONE
 - React Native
 - Flutter
 
