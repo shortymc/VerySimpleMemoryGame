@@ -24,28 +24,28 @@
         <div>
             <table class="memory_table">
                 <tr>
-                    <td class="table_item" id="item_0"><img id="img_0"></td>
-                    <td class="table_item" id="item_1"><img id="img_1"></td>
-                    <td class="table_item" id="item_2"><img id="img_2"></td>
-                    <td class="table_item" id="item_3"><img id="img_3"></td>
+                    <td class="table_item" id="item_0"><img id="img_0"><p id="txt_0"></p></td>
+                    <td class="table_item" id="item_1"><img id="img_1"><p id="txt_1"></p></td>
+                    <td class="table_item" id="item_2"><img id="img_2"><p id="txt_2"></p></td>
+                    <td class="table_item" id="item_3"><img id="img_3"><p id="txt_3"></p></td>
                 </tr>
                 <tr>
-                    <td class="table_item"  id="item_4"><img id="img_4"></td>
-                    <td class="table_item" id="item_5"><img id="img_5"></td>
-                    <td  class="table_item" id="item_6"><img id="img_6"></td>
-                    <td  class="table_item" id="item_7"><img id="img_7"></td>
+                    <td class="table_item"  id="item_4"><img id="img_4"><p id="txt_4"></p></td>
+                    <td class="table_item" id="item_5"><img id="img_5"><p id="txt_5"></p></td>
+                    <td  class="table_item" id="item_6"><img id="img_6"><p id="txt_6"></p></td>
+                    <td  class="table_item" id="item_7"><img id="img_7"><p id="txt_7"></p></td>
                 </tr>
                 <tr>
-                    <td class="table_item"  id="item_8"><img id="img_8"></td>
-                    <td  class="table_item" id="item_9"><img id="img_9"></td>
-                    <td class="table_item"  id="item_10"><img id="img_10"></td>
-                    <td  class="table_item" id="item_11"><img id="img_11"></td>
+                    <td class="table_item"  id="item_8"><img id="img_8"><p id="txt_8"></p></td>
+                    <td  class="table_item" id="item_9"><img id="img_9"><p id="txt_9"></p></td>
+                    <td class="table_item"  id="item_10"><img id="img_10"><p id="txt_10"></p></td>
+                    <td  class="table_item" id="item_11"><img id="img_11"><p id="txt_11"></p></td>
                 </tr>
                 <tr>
-                    <td  class="table_item" id="item_12"><img id="img_12"></td>
-                    <td  class="table_item" id="item_13"><img id="img_13"></td>
-                    <td  class="table_item" id="item_14"><img id="img_14"></td>
-                    <td class="table_item"  id="item_15"><img id="img_15"></td>
+                    <td  class="table_item" id="item_12"><img id="img_12"><p id="txt_12"></p></td>
+                    <td  class="table_item" id="item_13"><img id="img_13"><p id="txt_13"></p></td>
+                    <td  class="table_item" id="item_14"><img id="img_14"><p id="txt_14"></p></td>
+                    <td class="table_item"  id="item_15"><img id="img_15"><p id="txt_15"></p></td>
                 </tr>
             </table>
         </div>
@@ -62,15 +62,21 @@
         <button id="new_game_btn" onclick="newGame(true)">New Game</button>
 
 
-
-
         <script>
             document.addEventListener('deviceready', onDeviceReady);
             function onDeviceReady() {
-              //  memoryStart();
-              if(localStorage.bestMoves==undefined){localStorage.bestMoves=100;}
-               if(localStorage.bestTime==undefined){localStorage.bestTime=1000000;}
-             newGame(false);
+
+                if (localStorage.bestMoves == undefined) {
+                    localStorage.bestMoves = 100;
+                }
+                if (localStorage.bestTime == undefined) {
+                    localStorage.bestTime = 1000000;
+                }
+
+                $('.table_item img').attr('src', "andraganoid.jpg");
+                resetResult();
+                $("#current_moves").text(0);
+                $("#current_time").text(0);
             }
         </script>
     </body>

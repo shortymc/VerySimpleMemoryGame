@@ -17,10 +17,10 @@ table{
 td{
     border: 2px solid black;
     border-collapse: collapse;
-    border-radius: .5em;
+    border-radius: 1em;
     text-align: center;
-    font-size: 3em;
     width: 20vw;
+    height: 20vw;
 }
 
 td img{
@@ -28,12 +28,20 @@ td img{
     max-height: 100%
 }
 
+td p{
+    font-size: 3em;
+    display: none;
+    margin: 0;
+}
+
 #new_game_btn{
     width: 96vw;
     height: 9vh;
     background-color: cadetblue;
-         font-size: 1.2em;
+    font-size: 1.2em;
 }
+
+
 
 
 
