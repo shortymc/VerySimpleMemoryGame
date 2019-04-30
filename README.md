@@ -11,5 +11,5 @@ I have the intention to make this classic and simple game using:
 - Kotlin DONE
 - Cordova DONE
 - React Native
-- Flutter
+- Flutter UNDER CONSTRUCTION
 
