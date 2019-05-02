@@ -1,16 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:memory_flutter/MemoryGame.dart';
 
-List<Field> fieldsList;
-var bMoves;
-var bTime;
-var cMoves;
-var cTime;
 final int FIELDS_NUMBER = 16;
 final int FIELD_ROWS = 4;
 final int FIELD_COLS = 4;
+List<Field> fieldsList;
+
+SharedPreferences prefs;
+var mGame = MemoryGame();
+var result;
 
 void main() {
-  runApp(MemoryMain());
+  _getPrefs();
+//  runApp(MemoryMain());
+}
+
+_getPrefs() async {
+  await SharedPreferences.getInstance().then((SharedPreferences sp) {
+    print("START");
+    prefs = sp;
+    runApp(MemoryMain());
+  });
 }
 
 class MemoryMain extends StatelessWidget {
@@ -35,37 +46,30 @@ class Memory extends StatefulWidget {
 }
 
 class _MemoryState extends State<Memory> {
-  _MemoryState() {
+  @override
+  void initState() {
+    super.initState();
     _newGame();
   }
+
+//  _MemoryState() {
+//    _newGame();
+//  }
 
   void _newGame() {
     fieldsList = List(FIELDS_NUMBER);
     for (var i = 0; i < FIELDS_NUMBER / 2; i++) {
       fieldsList[i] = (Field(i));
-      fieldsList[i + (FIELDS_NUMBER / 2).toInt()] = (Field(i));
+      fieldsList[i + FIELDS_NUMBER ~/ 2] = (Field(i));
       print(i);
     }
     fieldsList.shuffle();
     fieldsList.shuffle();
     fieldsList.shuffle();
+    result = Result(prefs);
 
-    bMoves = 100;
-    bTime = 1000 * 1000;
-    cMoves = 0;
-    cTime = 0;
+    setState(() {});
   }
-
-//// Default placeholder text
-//  String textToShow = "I Like Flutter";
-//
-//  void _updateText() {
-//    setState(() {
-//      // update the text
-//      textToShow = "Flutter is Awesome!";
-//    });
-//  }
-//
 
   @override
   Widget build(BuildContext context) {
@@ -74,17 +78,22 @@ class _MemoryState extends State<Memory> {
           title: Text("Memory-FLUTTER"),
         ),
         body: Column(children: <Widget>[
-          _setRow("Best moves: ", bMoves),
-          _setRow("Best time: ", bTime ~/ 1000),
+          _setRow("Best moves: ", result.bestMoves),
+          _setRow("Best time: ", result.bestTime ~/ 1000),
           _setTable(),
-          _setRow("Current moves: ", cMoves),
-          _setRow("Currentt time: ", cTime ~/ 1000),
+          _setRow("Current moves: ", result.currentMoves),
+          _setRow("Current time: ", result.currentTime ~/ 1000),
           MaterialButton(
             onPressed: _newGame,
             color: Colors.green,
             child: Text("New game"),
           )
         ]));
+  }
+
+  void _restartGame() {
+    setState(() {});
+    _newGame();
   }
 
   Widget _setRow(txt, val) {
@@ -118,7 +127,6 @@ class _MemoryState extends State<Memory> {
     return itemRows;
   }
 
-
 //  child: IntrinsicHeight(
 //  child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
 //  Expanded(
@@ -133,39 +141,33 @@ class _MemoryState extends State<Memory> {
   }
 
   Widget _getItem(indx) {
-//    return Text(
-//            indx.toString(),
-//            style: Theme.of(context).textTheme.headline,
-//          );
-
     var itm = fieldsList[indx];
     return Expanded(
-        child: Container(
-      child: IndexedStack(
-        index: itm.open ? 1 : 0,
-        //    index: 1,
-        children: <Widget>[
-          Image.asset(
-            'assets/andraganoid.jpg',
-          ),
-          Text(
-            itm.item.toString(),
-            style: Theme.of(context).textTheme.headline,
-          ),
-        ],
-      ),
-    ));
+        child: GestureDetector(
+            onTap: () {
+              _itemClicked(indx);
+            },
+            child: Container(
+              child: IndexedStack(
+                index: itm.open ? 1 : 0,
+                //    index: 1,
+                children: <Widget>[
+                  Image.asset(
+                    'assets/andraganoid.jpg',
+                  ),
+                  Text(
+                    itm.item.toString(),
+                    style: Theme.of(context).textTheme.headline,
+                  ),
+                ],
+              ),
+            )));
   }
-}
 
-class Field {
-  int item;
-  bool open;
-  bool solved;
-
-  Field(int item) {
-    this.item = item;
-    this.open = false;
-    this.solved = false;
+  void _itemClicked(indx) {
+    print("CLICKED: $indx");
+    fieldsList[indx].open = true;
+    setState(() {});
+    //  _updateItems();
   }
 }
