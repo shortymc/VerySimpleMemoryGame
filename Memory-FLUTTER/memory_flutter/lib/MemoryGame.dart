@@ -1,10 +1,7 @@
 import 'package:memory_flutter/main.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 
-class MemoryGame {
-
-}
+class MemoryGame {}
 
 class Field {
   int item;
@@ -23,20 +20,28 @@ class Result {
   int bestMoves;
   num currentTime;
   num bestTime;
-  int solved;
 
-  Result(prefs) {
-  //  if (prefs != null) {
-      this.bestMoves = prefs.get("bestMoves") ?? 100;
-      this.bestTime = prefs.get("bestTime") ?? 1000 * 1000;
-//    } else {
-//      this.bestMoves = 100;
-//      this.bestTime = 1000 * 1000;
-//    }
+  Result() {
+    this.bestMoves = prefs.getInt("bestMoves") ?? 100;
+    this.bestTime = prefs.get("bestTime") ?? 1000 * 1000;
     this.currentMoves = 0;
     this.currentTime = 0;
-    this.solved = 0;
-    print("1111 $bestTime");
   }
+}
+
+class Open {
+  int first;
+  int second;
+ // int opened;
+  int solved;
+
+  Open() {
+    this.first = -1;
+    this.second = -1;
+  // this.opened = 0;
+    this.solved = 0;
+  }
+
+
 
 }

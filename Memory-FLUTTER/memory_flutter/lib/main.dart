@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:memory_flutter/MemoryGame.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'dart:async';
 
 final int FIELDS_NUMBER = 16;
 final int FIELD_ROWS = 4;
 final int FIELD_COLS = 4;
 List<Field> fieldsList;
+bool clickable = false;
+bool btnVisibility = true;
 
 SharedPreferences prefs;
 var mGame = MemoryGame();
 var result;
+var open;
 
 void main() {
   _getPrefs();
-//  runApp(MemoryMain());
 }
 
 _getPrefs() async {
   await SharedPreferences.getInstance().then((SharedPreferences sp) {
-    print("START");
     prefs = sp;
     runApp(MemoryMain());
   });
@@ -52,10 +55,6 @@ class _MemoryState extends State<Memory> {
     _newGame();
   }
 
-//  _MemoryState() {
-//    _newGame();
-//  }
-
   void _newGame() {
     fieldsList = List(FIELDS_NUMBER);
     for (var i = 0; i < FIELDS_NUMBER / 2; i++) {
@@ -66,7 +65,8 @@ class _MemoryState extends State<Memory> {
     fieldsList.shuffle();
     fieldsList.shuffle();
     fieldsList.shuffle();
-    result = Result(prefs);
+    result = Result();
+    open = Open();
 
     setState(() {});
   }
@@ -77,23 +77,34 @@ class _MemoryState extends State<Memory> {
         appBar: AppBar(
           title: Text("Memory-FLUTTER"),
         ),
-        body: Column(children: <Widget>[
-          _setRow("Best moves: ", result.bestMoves),
-          _setRow("Best time: ", result.bestTime ~/ 1000),
-          _setTable(),
-          _setRow("Current moves: ", result.currentMoves),
-          _setRow("Current time: ", result.currentTime ~/ 1000),
-          MaterialButton(
-            onPressed: _newGame,
-            color: Colors.green,
-            child: Text("New game"),
-          )
-        ]));
+        body: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 6),
+            child: Column(children: <Widget>[
+              _setRow("Best moves: ", result.bestMoves),
+              _setRow("Best time: ", result.bestTime ~/ 1000),
+              _setTable(),
+              _setRow("Current moves: ", result.currentMoves),
+              _setRow("Current time: ", result.currentTime ~/ 1000),
+              _setButton()
+            ])));
   }
 
-  void _restartGame() {
-    setState(() {});
+  _newGameBtn() {
+    clickable = true;
+    btnVisibility = false;
     _newGame();
+  }
+
+  Widget _setButton() {
+    return Visibility(
+        visible: btnVisibility,
+        child: new SizedBox(
+            width: double.infinity,
+            child: MaterialButton(
+              onPressed: _newGameBtn,
+              color: Colors.green,
+              child: Text("New game"),
+            )));
   }
 
   Widget _setRow(txt, val) {
@@ -104,7 +115,7 @@ class _MemoryState extends State<Memory> {
 
   Widget _setText(txt) {
     return Padding(
-        padding: EdgeInsets.all(6),
+        padding: EdgeInsets.symmetric(vertical: 6),
         child: Text(
           txt,
           style: TextStyle(fontSize: 20),
@@ -126,10 +137,6 @@ class _MemoryState extends State<Memory> {
     }
     return itemRows;
   }
-
-//  child: IntrinsicHeight(
-//  child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-//  Expanded(
 
   List<Widget> _getItemCols(row) {
     List<Widget> itemCols = List(FIELD_COLS);
@@ -165,9 +172,77 @@ class _MemoryState extends State<Memory> {
   }
 
   void _itemClicked(indx) {
-    print("CLICKED: $indx");
-    fieldsList[indx].open = true;
+    if (clickable) {
+      fieldsList[indx].open = true;
+
+      if (open.first == -1) {
+        open.first = indx;
+        open.second = -1;
+        setState(() {});
+      } else {
+        open.second = indx;
+        result.currentMoves++;
+        if (fieldsList[open.first].item == fieldsList[open.second].item) {
+          fieldsList[open.first].solved = true;
+          fieldsList[open.second].solved = true;
+          open.solved++;
+
+          if (open.solved == FIELDS_NUMBER / 2) {
+            _endGame();
+          }
+        } else {
+          clickable = false;
+          var f = open.first;
+          var s = open.second;
+          Timer(Duration(seconds: 1), () {
+            fieldsList[f].open = false;
+            fieldsList[s].open = false;
+            clickable = true;
+            setState(() {});
+          });
+        }
+        open.first = -1;
+        open.second = -1;
+        setState(() {});
+      }
+    }
+  }
+
+  void _endGame() {
+    Fluttertoast.showToast(
+        msg: "Game Over",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.CENTER,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+
+    if (result.currentMoves < result.bestMoves) {
+      result.bestMoves = result.currentMoves;
+      prefs.setInt("bestMoves", result.currentMoves);
+
+      Fluttertoast.showToast(
+          msg: "Best moves",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+          backgroundColor: Colors.blue,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
+
+    if (result.currentTime < result.bestTime) {
+      result.bestTime = result.currentTime;
+      prefs.setInt("bestTime", result.currentTime);
+
+      Fluttertoast.showToast(
+          msg: "Best Time",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
+    btnVisibility = true;
     setState(() {});
-    //  _updateItems();
   }
 }
