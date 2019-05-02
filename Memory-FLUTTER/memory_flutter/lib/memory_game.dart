@@ -1,8 +1,6 @@
 import 'package:memory_flutter/main.dart';
 
 
-class MemoryGame {}
-
 class Field {
   int item;
   bool open;
@@ -32,13 +30,11 @@ class Result {
 class Open {
   int first;
   int second;
- // int opened;
   int solved;
 
   Open() {
     this.first = -1;
     this.second = -1;
-  // this.opened = 0;
     this.solved = 0;
   }
 

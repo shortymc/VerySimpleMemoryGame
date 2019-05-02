@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:memory_flutter/MemoryGame.dart';
+import 'package:memory_flutter/memory_game.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:async';
 
@@ -12,7 +12,6 @@ bool clickable = false;
 bool btnVisibility = true;
 
 SharedPreferences prefs;
-var mGame = MemoryGame();
 var result;
 var open;
 
@@ -60,7 +59,6 @@ class _MemoryState extends State<Memory> {
     for (var i = 0; i < FIELDS_NUMBER / 2; i++) {
       fieldsList[i] = (Field(i));
       fieldsList[i + FIELDS_NUMBER ~/ 2] = (Field(i));
-      print(i);
     }
     fieldsList.shuffle();
     fieldsList.shuffle();
