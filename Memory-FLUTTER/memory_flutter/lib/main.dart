@@ -52,7 +52,8 @@ class _MemoryState extends State<Memory> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);_newGame();
+    WidgetsBinding.instance.addObserver(this);
+    _newGame();
   }
 
   @override
@@ -63,7 +64,6 @@ class _MemoryState extends State<Memory> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    print(state.toString());
     switch (state) {
       case AppLifecycleState.inactive:
       case AppLifecycleState.paused:
@@ -72,10 +72,10 @@ class _MemoryState extends State<Memory> with WidgetsBindingObserver {
         }
         break;
       case AppLifecycleState.resumed:
-     _newGame();
-      clickable = false;
-       btnVisibility = true;
-      setState(() {});
+        _newGame();
+        clickable = false;
+        btnVisibility = true;
+        setState(() {});
         break;
       case AppLifecycleState.suspending:
         break;
@@ -83,7 +83,9 @@ class _MemoryState extends State<Memory> with WidgetsBindingObserver {
   }
 
   void _newGame() {
-    if (stopwatch != null) {stopwatch.cancel();}
+    if (stopwatch != null) {
+      stopwatch.cancel();
+    }
     fieldsList = List(FIELDS_NUMBER);
     for (var i = 0; i < FIELDS_NUMBER / 2; i++) {
       fieldsList[i] = (Field(i));
@@ -192,16 +194,27 @@ class _MemoryState extends State<Memory> with WidgetsBindingObserver {
               _itemClicked(indx);
             },
             child: Container(
+              margin: EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 3),
+                  borderRadius: BorderRadius.all(Radius.circular(16))),
+              height: MediaQuery.of(context).size.height * 0.12,
               child: IndexedStack(
-                index: itm.open ? 1 : 0,
+                index: itm.open || itm.solved ? 1 : 0,
                 //    index: 1,
                 children: <Widget>[
-                  Image.asset(
-                    'assets/andraganoid.jpg',
+                  Align(
+                    child: Image.asset(
+                      'assets/andraganoid.jpg',
+                      alignment: Alignment.center,
+                    ),
                   ),
-                  Text(
-                    itm.item.toString(),
-                    style: Theme.of(context).textTheme.headline,
+                  Align(
+                    child: Text(
+                      itm.item.toString(),
+                      style: TextStyle(fontSize: 40),
+                    ),
+                    alignment: Alignment.center,
                   ),
                 ],
               ),
