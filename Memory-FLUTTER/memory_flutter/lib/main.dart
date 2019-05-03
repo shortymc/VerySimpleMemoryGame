@@ -10,6 +10,7 @@ final int FIELD_COLS = 4;
 List<Field> fieldsList;
 bool clickable = false;
 bool btnVisibility = true;
+Timer stopwatch;
 
 SharedPreferences prefs;
 var result;
@@ -47,14 +48,42 @@ class Memory extends StatefulWidget {
   _MemoryState createState() => _MemoryState();
 }
 
-class _MemoryState extends State<Memory> {
+class _MemoryState extends State<Memory> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    _newGame();
+    WidgetsBinding.instance.addObserver(this);_newGame();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print(state.toString());
+    switch (state) {
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.paused:
+        if (stopwatch != null) {
+          stopwatch.cancel();
+        }
+        break;
+      case AppLifecycleState.resumed:
+     _newGame();
+      clickable = false;
+       btnVisibility = true;
+      setState(() {});
+        break;
+      case AppLifecycleState.suspending:
+        break;
+    }
   }
 
   void _newGame() {
+    if (stopwatch != null) {stopwatch.cancel();}
     fieldsList = List(FIELDS_NUMBER);
     for (var i = 0; i < FIELDS_NUMBER / 2; i++) {
       fieldsList[i] = (Field(i));
@@ -67,6 +96,15 @@ class _MemoryState extends State<Memory> {
     open = Open();
 
     setState(() {});
+  }
+
+  _stopwatch() {
+    var start = DateTime.now().millisecondsSinceEpoch;
+    Timer.periodic(Duration(milliseconds: 1000), (timer) {
+      stopwatch = timer;
+      result.currentTime = DateTime.now().millisecondsSinceEpoch - start;
+      setState(() {});
+    });
   }
 
   @override
@@ -91,6 +129,7 @@ class _MemoryState extends State<Memory> {
     clickable = true;
     btnVisibility = false;
     _newGame();
+    _stopwatch();
   }
 
   Widget _setButton() {
@@ -171,42 +210,45 @@ class _MemoryState extends State<Memory> {
 
   void _itemClicked(indx) {
     if (clickable) {
-      fieldsList[indx].open = true;
+      if (fieldsList[indx].open != true && fieldsList[indx].solved != true) {
+        fieldsList[indx].open = true;
 
-      if (open.first == -1) {
-        open.first = indx;
-        open.second = -1;
-        setState(() {});
-      } else {
-        open.second = indx;
-        result.currentMoves++;
-        if (fieldsList[open.first].item == fieldsList[open.second].item) {
-          fieldsList[open.first].solved = true;
-          fieldsList[open.second].solved = true;
-          open.solved++;
-
-          if (open.solved == FIELDS_NUMBER / 2) {
-            _endGame();
-          }
+        if (open.first == -1) {
+          open.first = indx;
+          open.second = -1;
+          setState(() {});
         } else {
-          clickable = false;
-          var f = open.first;
-          var s = open.second;
-          Timer(Duration(seconds: 1), () {
-            fieldsList[f].open = false;
-            fieldsList[s].open = false;
-            clickable = true;
-            setState(() {});
-          });
+          open.second = indx;
+          result.currentMoves++;
+          if (fieldsList[open.first].item == fieldsList[open.second].item) {
+            fieldsList[open.first].solved = true;
+            fieldsList[open.second].solved = true;
+            open.solved++;
+
+            if (open.solved == FIELDS_NUMBER / 2) {
+              _endGame();
+            }
+          } else {
+            clickable = false;
+            var f = open.first;
+            var s = open.second;
+            Timer(Duration(seconds: 1), () {
+              fieldsList[f].open = false;
+              fieldsList[s].open = false;
+              clickable = true;
+              setState(() {});
+            });
+          }
+          open.first = -1;
+          open.second = -1;
+          setState(() {});
         }
-        open.first = -1;
-        open.second = -1;
-        setState(() {});
       }
     }
   }
 
   void _endGame() {
+    stopwatch.cancel();
     Fluttertoast.showToast(
         msg: "Game Over",
         toastLength: Toast.LENGTH_LONG,
