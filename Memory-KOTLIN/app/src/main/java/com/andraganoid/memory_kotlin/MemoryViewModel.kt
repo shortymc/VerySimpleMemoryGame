@@ -11,9 +11,9 @@ import androidx.lifecycle.LiveData
 
 class MemoryViewModel(application: Application) : AndroidViewModel(application) {
 
-    internal var mGame: MemoryGame
-    internal var prefs: SharedPreferences
-    internal var canOpenField: Boolean = false
+    private var mGame: MemoryGame
+    private var prefs: SharedPreferences
+    private var canOpenField: Boolean = false
 
     val memoryList: LiveData<List<Field>>
         get() = mGame.memoryList
@@ -28,7 +28,7 @@ class MemoryViewModel(application: Application) : AndroidViewModel(application) 
         canOpenField = true
     }
 
-    internal fun newGame() {
+    fun newGame() {
         mGame.initFields(prefs.getInt("bestMoves", 100), prefs.getLong("bestTime", 1000 * 1000L))
     }
 
@@ -65,7 +65,7 @@ class MemoryViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    internal fun stopTimer() {
+     fun stopTimer() {
         mGame.stopStopwatch()
     }
 }

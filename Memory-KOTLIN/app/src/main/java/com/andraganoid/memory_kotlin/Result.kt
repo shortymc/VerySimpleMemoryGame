@@ -6,13 +6,11 @@ class Result(val bestMoves: Int, val bestTime: Long) {
     var currentTime: Long = 0;
     var solved: Int = 0
 
-    fun bestTimeInSeconds(): String {
-        return (bestTime.toInt() / 1000).toString()
-    }
+    fun bestTimeInSeconds(): String=(bestTime.toInt() / 1000).toString()
 
-    fun currentTimeInSeconds(): String {
-        return (currentTime.toInt() / 1000).toString()
-    }
+
+    fun currentTimeInSeconds(): String= (currentTime.toInt() / 1000).toString()
+
 
     fun increaseCurrentMoves() {
         currentMoves++

@@ -11,23 +11,19 @@ import kotlinx.android.synthetic.main.field_row.view.*
 
 
 class GridMemoryAdapter(internal val context: Context, internal val itemHeight: Int) : BaseAdapter() {
-    internal var fList: List<Field> = listOf()
+    private var fList: List<Field> = listOf()
 
     init {
         setFields(fList)
     }
 
-    override fun getCount(): Int {
-        return fList.size
-    }
+    override fun getCount(): Int = fList.size
 
-    override fun getItem(position: Int): Any? {
-        return null
-    }
 
-    override fun getItemId(position: Int): Long {
-        return 0
-    }
+    override fun getItem(position: Int): Any? =null
+
+
+    override fun getItemId(position: Int): Long =0
 
     override fun getView(position: Int, view: View?, parent: ViewGroup?): View {
 

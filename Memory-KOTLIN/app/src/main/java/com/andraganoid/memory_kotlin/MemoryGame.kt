@@ -8,22 +8,22 @@ import java.util.*
 
 class MemoryGame {
 
-    internal var memoryList: MutableLiveData<List<Field>>
-    internal lateinit var memoryResult: MutableLiveData<Result>
-    internal var mList: MutableList<Field> = ArrayList()
-    internal var randFields: MutableList<Int> = ArrayList()
-    internal val FIELD_ROWS = 4
-    internal val FIELD_COLS = 4
-    internal val FIELDS_NUMBER = 16
+     var memoryList: MutableLiveData<List<Field>>
+     lateinit var memoryResult: MutableLiveData<Result>
+    private var mList: MutableList<Field> = ArrayList()
+    private var randFields: MutableList<Int> = ArrayList()
+    private val FIELD_ROWS = 4
+    private val FIELD_COLS = 4
+    private val FIELDS_NUMBER = 16
     val ALL_SOLVED = 8
 
-    internal var opened1: Int = 0
-    internal var opened2: Int = 0
-    internal var opened: Int = 0
+    private var opened1: Int = 0
+    private var opened2: Int = 0
+    private var opened: Int = 0
 
-    internal lateinit var handler: Handler
-    internal var startTime: Long = 0
-    internal var currentTime: Long = 0
+    private lateinit var handler: Handler
+    private var startTime: Long = 0
+     var currentTime: Long = 0
 
     private val stopwatch = object : Runnable {
         override fun run() {
@@ -45,7 +45,6 @@ class MemoryGame {
         opened1 = -1
         opened2 = -1
         opened = 0
-        println("INIT")
         randFields.clear()
         for (i in 0 until FIELDS_NUMBER / 2) {
             randFields.add(i)
@@ -92,7 +91,7 @@ class MemoryGame {
         return opened
     }
 
-    internal fun closeOpened() {
+    fun closeOpened() {
         opened = 0
         memoryList.value!![opened1].isOpen = false
         memoryList.value!![opened2].isOpen = false
