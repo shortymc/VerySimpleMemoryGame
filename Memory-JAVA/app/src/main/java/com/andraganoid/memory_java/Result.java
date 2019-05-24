@@ -1,6 +1,9 @@
 package com.andraganoid.memory_java;
 
-public class Result {
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
+
+public class Result extends BaseObservable {
 
     private int currentMoves;
     private int bestMoves;
@@ -8,7 +11,7 @@ public class Result {
     private long bestTime;
     private int solved;
 
-    public Result(int bm, long bt) {
+    Result(int bm, long bt) {
         this.bestMoves = bm;
         this.bestTime = bt;
         this.currentMoves = 0;
@@ -16,37 +19,71 @@ public class Result {
         this.solved = 0;
     }
 
+    void setCurrentTime(long currentTime) {
+        this.currentTime = currentTime;
+        notifyPropertyChanged(BR.currentTime);
+    }
+
+    void setBestMoves(int bestMoves) {
+        this.bestMoves = bestMoves;
+        notifyPropertyChanged(BR.bestMoves);
+    }
+
+    @Bindable
     public int getCurrentMoves() {
         return currentMoves;
     }
 
+    @Bindable
     public int getBestMoves() {
         return bestMoves;
     }
 
-    public void setCurrentTime(long currentTime) {
-        this.currentTime = currentTime;
+    @Bindable
+    public long getCurrentTime() {
+        return currentTime;
     }
 
-    public String getBestTimeInSeconds() {
-        return String.valueOf((int) bestTime / 1000);
+    @Bindable
+    public long getBestTime() {
+        return bestTime;
     }
 
-    public String getCurrentTimeInSeconds() {
-        return String.valueOf((int) currentTime / 1000);
-    }
+
+//    public String getBestTimeInSeconds() {
+
+//        return String.valueOf((int) bestTime / 1000);
+//    }
+//    public String getCurrentTimeInSeconds() {
+
+//        return String.valueOf((int) currentTime / 1000);
+
+//    }
 
     public void increaseCurrentMoves() {
         currentMoves++;
+        notifyPropertyChanged(BR.currentMoves);
     }
 
     public int getSolved() {
         return solved;
     }
 
-
     public void increaseSolved() {
         solved++;
     }
 
+    public void setCurrentMoves(int currentMoves) {
+        this.currentMoves = currentMoves;
+        notifyPropertyChanged(BR.currentMoves);
+    }
+
+    public void setBestTime(long bestTime) {
+        this.bestTime = bestTime;
+        notifyPropertyChanged(BR.bestTime);
+    }
+
+    public void setSolved(int solved) {
+        this.solved = solved;
+    }
 }
