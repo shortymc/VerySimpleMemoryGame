@@ -50,16 +50,6 @@ public class Result extends BaseObservable {
     }
 
 
-//    public String getBestTimeInSeconds() {
-
-//        return String.valueOf((int) bestTime / 1000);
-//    }
-//    public String getCurrentTimeInSeconds() {
-
-//        return String.valueOf((int) currentTime / 1000);
-
-//    }
-
     public void increaseCurrentMoves() {
         currentMoves++;
         notifyPropertyChanged(BR.currentMoves);
@@ -73,17 +63,9 @@ public class Result extends BaseObservable {
         solved++;
     }
 
-    public void setCurrentMoves(int currentMoves) {
-        this.currentMoves = currentMoves;
-        notifyPropertyChanged(BR.currentMoves);
-    }
-
     public void setBestTime(long bestTime) {
         this.bestTime = bestTime;
         notifyPropertyChanged(BR.bestTime);
     }
 
-    public void setSolved(int solved) {
-        this.solved = solved;
-    }
 }

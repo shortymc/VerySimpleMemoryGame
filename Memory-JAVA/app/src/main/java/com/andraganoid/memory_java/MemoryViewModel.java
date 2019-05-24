@@ -73,7 +73,7 @@ public class MemoryViewModel extends AndroidViewModel {
         for (int i = 0; i < FIELD_ROWS; i++) {
             for (int j = 0; j < FIELD_COLS; j++) {
                 index = i * FIELD_ROWS + j;
-                mList.add(new Field(randFields.get(index), index));
+                mList.add(new Field(randFields.get(index)));
             }
         }
 

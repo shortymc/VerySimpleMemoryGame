@@ -13,12 +13,12 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 
-import com.andraganoid.memory_java.databinding.ActivityMainBinding;
+import com.andraganoid.memory_java.databinding.MemoryBinding;
 
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity {
+public class Memory extends AppCompatActivity {
 
     MemoryViewModel memoryViewModel;
     GridView memoGridView;
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         display.getMetrics(dm);
 
         memoryViewModel = ViewModelProviders.of(this).get(MemoryViewModel.class);
-        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);//.vmodel = myWeatherViewModel
+        MemoryBinding binding = DataBindingUtil.setContentView(this, R.layout.memory);//.vmodel = myWeatherViewModel
 
         binding.setResult(memoryViewModel.memoryResult);
         binding.setViewModel(memoryViewModel);

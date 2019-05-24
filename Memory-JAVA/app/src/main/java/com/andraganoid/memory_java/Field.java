@@ -7,7 +7,7 @@ public class Field {
     private boolean open;
 
 
-    public Field(int item, int index) {
+    public Field(int item) {
         this.item = item;
         this.solved = false;
         this.open = false;
