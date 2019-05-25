@@ -1,23 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+
+<layout>
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="field"
+            type="com.andraganoid.memory_java.Field" />
+
+        <variable
+            name="click"
+            type="com.andraganoid.memory_java.ClickHandler" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
     android:background="@drawable/field_stroke"
-    android:orientation="vertical"
-    android:padding="2dp">
+        android:orientation="vertical"
+        android:padding="2dp">
 
-    <TextView
-        android:id="@+id/field_item"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center" />
+        <TextView
+            android:id="@+id/field_item"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="@{field.itemHeight/2}"
+            android:visibility="@{field.open || field.solved ? View.VISIBLE :View.GONE}" />
 
-    <ImageView
+        <ImageView
 
-        android:id="@+id/field_back_img"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/andraganoid"
-        android:visibility="gone" />
+            android:id="@+id/field_back_img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:onClick="@{() -> click.onFieldClicked(field.index)}"
+            android:src="@drawable/andraganoid"
+            android:visibility="@{field.open || field.solved ? View.GONE :View.VISIBLE}" />
 
-</LinearLayout>
+    </LinearLayout>
+
+</layout>

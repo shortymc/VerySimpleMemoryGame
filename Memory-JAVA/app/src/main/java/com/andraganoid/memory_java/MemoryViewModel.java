@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MemoryViewModel extends AndroidViewModel {
+public class MemoryViewModel extends AndroidViewModel implements ClickHandler {
 
     Result memoryResult;
     private MutableLiveData <List <Field>> memoryList;
@@ -30,14 +30,12 @@ public class MemoryViewModel extends AndroidViewModel {
     private final int FIELD_COLS = 4;
     private final int FIELDS_NUMBER = 16;
     private final int ALL_SOLVED = 8;
-
     private int opened1, opened2, opened;
-
     private Handler handler;
     private long startTime, currentTime;
-
     private SharedPreferences prefs;
     private boolean canOpenField;
+    float itemHeight;
 
     MemoryViewModel(@NonNull Application application) {
         super(application);
@@ -73,7 +71,7 @@ public class MemoryViewModel extends AndroidViewModel {
         for (int i = 0; i < FIELD_ROWS; i++) {
             for (int j = 0; j < FIELD_COLS; j++) {
                 index = i * FIELD_ROWS + j;
-                mList.add(new Field(randFields.get(index)));
+                mList.add(new Field(randFields.get(index), index, itemHeight));
             }
         }
 
@@ -85,8 +83,8 @@ public class MemoryViewModel extends AndroidViewModel {
         handler.postDelayed(stopwatch, 0);
     }
 
-
-    public void fieldClicked(int id) {
+    @Override
+    public void onFieldClicked(int id) {
 
         if (canOpenField) {
 
@@ -126,6 +124,7 @@ public class MemoryViewModel extends AndroidViewModel {
     private int whatIsOpen(int id) {
 
         if (!memoryList.getValue().get(id).isSolved() && !memoryList.getValue().get(id).isOpen()) {
+            //  if (!field.isSolved() && !field.isOpen()) {
             opened = opened == 1 ? 2 : 1;
             switch (opened) {
                 case 1:
