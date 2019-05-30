@@ -14,14 +14,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MemoryAdapter extends RecyclerView.Adapter <MemoryAdapter.ViewHolder> {
-    private List <Field> fList = new ArrayList <>();
+public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.ViewHolder> {
+    private List<Field> fList = new ArrayList<>();
+    private ClickHandler click;
 
-    MemoryAdapter() {
+    MemoryAdapter(ClickHandler click) {
+        this.click = click;
         setFields(fList);
+
     }
 
-    void setFields(List <Field> fList) {
+    void setFields(List<Field> fList) {
         this.fList = fList;
         notifyDataSetChanged();
     }
@@ -34,7 +37,12 @@ public class MemoryAdapter extends RecyclerView.Adapter <MemoryAdapter.ViewHolde
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        FieldRowBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.field_row, parent, false);
+        FieldRowBinding binding =
+                DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
+                        R.layout.field_row,
+                        parent,
+                        false);
+
         return new ViewHolder(binding);
     }
 
@@ -50,6 +58,7 @@ public class MemoryAdapter extends RecyclerView.Adapter <MemoryAdapter.ViewHolde
         public ViewHolder(@NonNull FieldRowBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+            binding.setClick(click);
         }
 
         void bind(Field field) {

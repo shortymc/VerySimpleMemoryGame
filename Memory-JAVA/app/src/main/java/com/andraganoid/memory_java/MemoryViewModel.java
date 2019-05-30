@@ -6,6 +6,7 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MemoryViewModel extends AndroidViewModel implements ClickHandler {
+public class MemoryViewModel extends AndroidViewModel {
 
     Result memoryResult;
     private MutableLiveData <List <Field>> memoryList;
@@ -35,7 +36,7 @@ public class MemoryViewModel extends AndroidViewModel implements ClickHandler {
     private long startTime, currentTime;
     private SharedPreferences prefs;
     private boolean canOpenField;
-    float itemHeight;
+   public int itemHeight;
 
     MemoryViewModel(@NonNull Application application) {
         super(application);
@@ -83,8 +84,8 @@ public class MemoryViewModel extends AndroidViewModel implements ClickHandler {
         handler.postDelayed(stopwatch, 0);
     }
 
-    @Override
-    public void onFieldClicked(int id) {
+   public void onFieldClicked(int id) {
+
 
         if (canOpenField) {
 

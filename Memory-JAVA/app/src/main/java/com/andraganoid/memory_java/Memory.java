@@ -1,6 +1,7 @@
 package com.andraganoid.memory_java;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -11,8 +12,10 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 
 import com.andraganoid.memory_java.databinding.MemoryBinding;
@@ -20,12 +23,10 @@ import com.andraganoid.memory_java.databinding.MemoryBinding;
 import java.util.List;
 
 
-public class Memory extends AppCompatActivity {
+public class Memory extends AppCompatActivity implements ClickHandler {
 
     private MemoryViewModel memoryViewModel;
-    MemoryAdapter mAdapter;
-    // GridView memoGridView;
-    // GridMemoryAdapter mAdapter;
+    private MemoryAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,24 +37,20 @@ public class Memory extends AppCompatActivity {
         display.getMetrics(dm);
 
         memoryViewModel = ViewModelProviders.of(this).get(MemoryViewModel.class);
-        memoryViewModel.itemHeight = (float) (dm.heightPixels * .12);
+        memoryViewModel.itemHeight = (int) (dm.heightPixels * .12);
         MemoryBinding binding = DataBindingUtil.setContentView(this, R.layout.memory);
 
         binding.setResult(memoryViewModel.memoryResult);
         binding.setViewModel(memoryViewModel);
 
-//        memoGridView = findViewById(R.id.fields_grid_view);
-//        mAdapter = new GridMemoryAdapter(this, (int) (dm.heightPixels * .12));
-//        memoGridView.setAdapter(mAdapter);
-
         RecyclerView recView = findViewById(R.id.memoryRecView);
         recView.setLayoutManager(new GridLayoutManager(this, 4));
-        mAdapter = new MemoryAdapter();
+        mAdapter = new MemoryAdapter(this);
         recView.setAdapter(mAdapter);
 
-        memoryViewModel.getMemoryList().observe(this, new Observer <List <Field>>() {
+        memoryViewModel.getMemoryList().observe(this, new Observer<List<Field>>() {
             @Override
-            public void onChanged(List <Field> fields) {
+            public void onChanged(List<Field> fields) {
                 mAdapter.setFields(fields);
             }
         });
@@ -73,4 +70,10 @@ public class Memory extends AppCompatActivity {
         memoryViewModel.stopStopwatch();
     }
 
+
+    @Override
+    public void onFieldClicked(int id) {
+        Toast.makeText(this, "CLICK", Toast.LENGTH_SHORT).show();
+       memoryViewModel.onFieldClicked(id);
+    }
 }

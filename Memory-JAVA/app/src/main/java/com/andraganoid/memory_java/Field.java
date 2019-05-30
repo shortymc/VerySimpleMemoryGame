@@ -1,20 +1,25 @@
 package com.andraganoid.memory_java;
 
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.databinding.BindingAdapter;
+
 public class Field {
 
     private int item;
     private boolean solved;
     private boolean open;
     private int index;
-    private float itemHeight;
+    private int itemHeight;
 
 
-    public Field(int item, int index, float itemHeight) {
+    public Field(int item, int index, int itemHeight) {
         this.item = item;
         this.solved = false;
         this.open = false;
         this.index = index;
-        this.itemHeight=itemHeight;
+        this.itemHeight = itemHeight;
     }
 
 
@@ -42,12 +47,19 @@ public class Field {
         return index;
     }
 
-    public float getItemHeight() {
+    public int getItemHeight() {
         return itemHeight;
 
     }
 
-    public void setItemHeight(float itemHeight) {
+    public void setItemHeight(int itemHeight) {
         this.itemHeight = itemHeight;
+    }
+
+    @BindingAdapter("android:layout_height")
+    public static void setLayoutHeight(View view, int height) {
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+        layoutParams.height = height;
+        view.setLayoutParams(layoutParams);
     }
 }
