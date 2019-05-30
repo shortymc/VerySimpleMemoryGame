@@ -27,6 +27,7 @@ public class Memory extends AppCompatActivity implements ClickHandler {
 
     private MemoryViewModel memoryViewModel;
     private MemoryAdapter mAdapter;
+    boolean isSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,8 @@ public class Memory extends AppCompatActivity implements ClickHandler {
         Display display = getWindowManager().getDefaultDisplay();
         DisplayMetrics dm = new DisplayMetrics();
         display.getMetrics(dm);
+
+        isSet = false;
 
         memoryViewModel = ViewModelProviders.of(this).get(MemoryViewModel.class);
         memoryViewModel.itemHeight = (int) (dm.heightPixels * .12);
@@ -48,10 +51,29 @@ public class Memory extends AppCompatActivity implements ClickHandler {
         mAdapter = new MemoryAdapter(this);
         recView.setAdapter(mAdapter);
 
+
+        memoryViewModel.getItem1().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer item1) {
+
+                mAdapter.notifyItemChanged(item1);
+            }
+        });
+
+//        memoryViewModel.getItem2().observe(this, new Observer<Integer>() {
+//            @Override
+//            public void onChanged(Integer item2) {
+//                mAdapter.notifyItemChanged(item2);
+//            }
+//        });
+
         memoryViewModel.getMemoryList().observe(this, new Observer<List<Field>>() {
             @Override
             public void onChanged(List<Field> fields) {
-                mAdapter.setFields(fields);
+                if (!isSet) {
+                    mAdapter.setFields(fields);
+                    isSet = true;
+                }
             }
         });
 
@@ -74,6 +96,6 @@ public class Memory extends AppCompatActivity implements ClickHandler {
     @Override
     public void onFieldClicked(int id) {
         Toast.makeText(this, "CLICK", Toast.LENGTH_SHORT).show();
-       memoryViewModel.onFieldClicked(id);
+        memoryViewModel.onFieldClicked(id);
     }
 }

@@ -15,18 +15,23 @@ import java.util.List;
 
 
 public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.ViewHolder> {
-    private List<Field> fList = new ArrayList<>();
+    private List<Field> fList;
     private ClickHandler click;
 
     MemoryAdapter(ClickHandler click) {
         this.click = click;
-        setFields(fList);
+        //setFields(fList);
+      this.fList = new ArrayList<>();
 
     }
 
     void setFields(List<Field> fList) {
         this.fList = fList;
         notifyDataSetChanged();
+    }
+
+    void SetItems(int item1, int item2){
+
     }
 
     @Override

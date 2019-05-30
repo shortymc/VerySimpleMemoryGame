@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableBoolean;
+import androidx.databinding.ObservableInt;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -24,6 +25,14 @@ public class MemoryViewModel extends AndroidViewModel {
     Result memoryResult;
     private MutableLiveData <List <Field>> memoryList;
     public ObservableBoolean btnVisibility = new ObservableBoolean();
+
+    private MutableLiveData <Integer> item1;
+    private MutableLiveData <Integer> item2;
+
+
+//    public ObservableInt item1 = new ObservableInt();
+//    public ObservableInt item2 = new ObservableInt();
+
 
     private List <Field> mList = new ArrayList <>();
     private List <Integer> randFields = new ArrayList <>();
@@ -41,6 +50,8 @@ public class MemoryViewModel extends AndroidViewModel {
     MemoryViewModel(@NonNull Application application) {
         super(application);
         memoryList = new MutableLiveData <>();
+        item1 = new MutableLiveData <>();
+        item2 = new MutableLiveData <>();
         memoryResult = new Result(0, 0L);
         handler = new Handler();
         prefs = PreferenceManager.getDefaultSharedPreferences(application);
@@ -50,6 +61,13 @@ public class MemoryViewModel extends AndroidViewModel {
 
     LiveData <List <Field>> getMemoryList() {
         return memoryList;
+    }
+    LiveData <Integer> getItem1() {
+        return item1;
+    }
+
+    LiveData <Integer> getItem2() {
+        return item2;
     }
 
     public void newGame() {
@@ -73,6 +91,7 @@ public class MemoryViewModel extends AndroidViewModel {
             for (int j = 0; j < FIELD_COLS; j++) {
                 index = i * FIELD_ROWS + j;
                 mList.add(new Field(randFields.get(index), index, itemHeight));
+               // item1.setValue(index);
             }
         }
 
@@ -82,6 +101,7 @@ public class MemoryViewModel extends AndroidViewModel {
         currentTime = 0;
         startTime = SystemClock.uptimeMillis();
         handler.postDelayed(stopwatch, 0);
+
     }
 
    public void onFieldClicked(int id) {
@@ -131,34 +151,36 @@ public class MemoryViewModel extends AndroidViewModel {
                 case 1:
                     opened1 = id;
                     memoryList.getValue().get(opened1).setOpen(true);
+                    item1.setValue(opened1);
                     opened2 = -1;
                     break;
                 case 2:
                     opened2 = id;
                     memoryList.getValue().get(opened2).setOpen(true);
+                    item1.setValue(opened2);
                     break;
             }
-            memoryList.setValue(memoryList.getValue());
+           // memoryList.setValue(memoryList.getValue());
         }
         return opened;
     }
 
     private void closeOpened() {
         opened = 0;
-        memoryList.getValue().get(opened1).setOpen(false);
-        memoryList.getValue().get(opened2).setOpen(false);
+      if(!memoryList.getValue().get(opened1).isSolved())  {memoryList.getValue().get(opened1).setOpen(false);item1.setValue(opened1);}
+        if(!memoryList.getValue().get(opened2).isSolved())   {memoryList.getValue().get(opened2).setOpen(false);item1.setValue(opened2);}
         opened1 = -1;
         opened2 = -1;
-        memoryList.setValue(memoryList.getValue());
+       // memoryList.setValue(memoryList.getValue());
     }
 
 
     private int checkIsSolved() {
         memoryResult.increaseCurrentMoves();
         if (memoryList.getValue().get(opened1).getItem() == memoryList.getValue().get(opened2).getItem()) {
-            memoryList.getValue().get(opened1).setSolved(true);
-            memoryList.getValue().get(opened2).setSolved(true);
-            memoryList.setValue(memoryList.getValue());
+            memoryList.getValue().get(opened1).setSolved(true);item1.setValue(opened1);
+            memoryList.getValue().get(opened2).setSolved(true);item1.setValue(opened2);
+         //   memoryList.setValue(memoryList.getValue());
             memoryResult.increaseSolved();
         }
         return memoryResult.getSolved();

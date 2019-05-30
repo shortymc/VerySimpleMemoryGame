@@ -56,7 +56,7 @@ public class Field {
         this.itemHeight = itemHeight;
     }
 
-    @BindingAdapter("android:layout_height")
+    @BindingAdapter("my_layout_height")
     public static void setLayoutHeight(View view, int height) {
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
         layoutParams.height = height;
