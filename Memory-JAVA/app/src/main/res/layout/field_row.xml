@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         my_layout_height="@{field.itemHeight}"
         android:background="@drawable/field_stroke"
-        
+
         android:orientation="vertical"
         android:padding="2dp"
         android:layout_height="wrap_content"

@@ -52,10 +52,6 @@ public class Field {
 
     }
 
-    public void setItemHeight(int itemHeight) {
-        this.itemHeight = itemHeight;
-    }
-
     @BindingAdapter("my_layout_height")
     public static void setLayoutHeight(View view, int height) {
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();

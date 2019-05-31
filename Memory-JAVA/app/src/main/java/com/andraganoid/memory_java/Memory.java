@@ -1,7 +1,6 @@
 package com.andraganoid.memory_java;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -11,10 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Display;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.Toast;
 
 
@@ -52,7 +47,7 @@ public class Memory extends AppCompatActivity implements ClickHandler {
         recView.setAdapter(mAdapter);
 
 
-        memoryViewModel.getItem1().observe(this, new Observer<Integer>() {
+        memoryViewModel.getItemIndex().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer item1) {
 
@@ -60,30 +55,30 @@ public class Memory extends AppCompatActivity implements ClickHandler {
             }
         });
 
-//        memoryViewModel.getItem2().observe(this, new Observer<Integer>() {
+
+//        memoryViewModel.getMemoryList().observe(this, new Observer<List<Field>>() {
 //            @Override
-//            public void onChanged(Integer item2) {
-//                mAdapter.notifyItemChanged(item2);
+//            public void onChanged(List<Field> fields) {
+//                if (!isSet) {
+//                    mAdapter.setFields(fields);
+//                    isSet = true;
+//                }
 //            }
 //        });
 
-        memoryViewModel.getMemoryList().observe(this, new Observer<List<Field>>() {
+        memoryViewModel.getValueSet().observe(this, new Observer<Boolean>() {
+
+
+
             @Override
-            public void onChanged(List<Field> fields) {
-                if (!isSet) {
-                    mAdapter.setFields(fields);
-                    isSet = true;
+            public void onChanged(Boolean isSet) {
+                if (isSet) {
+                    mAdapter.setFields(memoryViewModel.getMemoryList());
                 }
             }
+
+
         });
-
-
-//        memoGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView <?> parent, View view, int position, long id) {
-//                memoryViewModel.onFieldClicked(position);
-//            }
-//        });
     }
 
     @Override

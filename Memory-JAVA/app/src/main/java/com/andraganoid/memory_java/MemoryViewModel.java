@@ -6,12 +6,10 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableBoolean;
-import androidx.databinding.ObservableInt;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -23,19 +21,16 @@ import java.util.List;
 public class MemoryViewModel extends AndroidViewModel {
 
     Result memoryResult;
-    private MutableLiveData <List <Field>> memoryList;
+    private List<Field> memoryList = new ArrayList<>();
+    //    private MutableLiveData <List <Field>> memoryList;
     public ObservableBoolean btnVisibility = new ObservableBoolean();
+    private MutableLiveData<Boolean> valueSet = new MutableLiveData<>();
 
-    private MutableLiveData <Integer> item1;
-    private MutableLiveData <Integer> item2;
-
-
-//    public ObservableInt item1 = new ObservableInt();
-//    public ObservableInt item2 = new ObservableInt();
+    private MutableLiveData<Integer> itemIndex;
 
 
-    private List <Field> mList = new ArrayList <>();
-    private List <Integer> randFields = new ArrayList <>();
+    // private List <Field> mList = new ArrayList <>();
+    private List<Integer> randFields = new ArrayList<>();
     private final int FIELD_ROWS = 4;
     private final int FIELD_COLS = 4;
     private final int FIELDS_NUMBER = 16;
@@ -45,13 +40,13 @@ public class MemoryViewModel extends AndroidViewModel {
     private long startTime, currentTime;
     private SharedPreferences prefs;
     private boolean canOpenField;
-   public int itemHeight;
+    public int itemHeight;
 
     MemoryViewModel(@NonNull Application application) {
         super(application);
-        memoryList = new MutableLiveData <>();
-        item1 = new MutableLiveData <>();
-        item2 = new MutableLiveData <>();
+//        memoryList = new MutableLiveData <>();
+        valueSet.setValue(false);
+        itemIndex = new MutableLiveData<>();
         memoryResult = new Result(0, 0L);
         handler = new Handler();
         prefs = PreferenceManager.getDefaultSharedPreferences(application);
@@ -59,16 +54,19 @@ public class MemoryViewModel extends AndroidViewModel {
         btnVisibility.set(true);
     }
 
-    LiveData <List <Field>> getMemoryList() {
+    // LiveData <List <Field>> getMemoryList() {
+    List<Field> getMemoryList() {
         return memoryList;
     }
-    LiveData <Integer> getItem1() {
-        return item1;
+
+    LiveData<Integer> getItemIndex() {
+        return itemIndex;
     }
 
-    LiveData <Integer> getItem2() {
-        return item2;
+    LiveData<Boolean> getValueSet() {
+        return valueSet;
     }
+
 
     public void newGame() {
         btnVisibility.set(false);
@@ -85,17 +83,17 @@ public class MemoryViewModel extends AndroidViewModel {
         Collections.shuffle(randFields);
         Collections.shuffle(randFields);
 
-        mList.clear();
+        memoryList.clear();
         int index;
         for (int i = 0; i < FIELD_ROWS; i++) {
             for (int j = 0; j < FIELD_COLS; j++) {
                 index = i * FIELD_ROWS + j;
-                mList.add(new Field(randFields.get(index), index, itemHeight));
-               // item1.setValue(index);
+                memoryList.add(new Field(randFields.get(index), index, itemHeight));
             }
         }
 
-        memoryList.setValue(mList);
+        //  memoryList.setValue(mList);
+        valueSet.setValue(true);
         memoryResult.setBestMoves(prefs.getInt("bestMoves", 100));
         memoryResult.setBestTime(prefs.getLong("bestTime", 1000 * 1000L));
         currentTime = 0;
@@ -104,7 +102,7 @@ public class MemoryViewModel extends AndroidViewModel {
 
     }
 
-   public void onFieldClicked(int id) {
+    public void onFieldClicked(int id) {
 
 
         if (canOpenField) {
@@ -144,43 +142,51 @@ public class MemoryViewModel extends AndroidViewModel {
 
     private int whatIsOpen(int id) {
 
-        if (!memoryList.getValue().get(id).isSolved() && !memoryList.getValue().get(id).isOpen()) {
+        if (!memoryList.get(id).isSolved() && !memoryList.get(id).isOpen()) {
             //  if (!field.isSolved() && !field.isOpen()) {
             opened = opened == 1 ? 2 : 1;
             switch (opened) {
                 case 1:
                     opened1 = id;
-                    memoryList.getValue().get(opened1).setOpen(true);
-                    item1.setValue(opened1);
+                    memoryList.get(opened1).setOpen(true);
+                    itemIndex.setValue(opened1);
                     opened2 = -1;
                     break;
                 case 2:
                     opened2 = id;
-                    memoryList.getValue().get(opened2).setOpen(true);
-                    item1.setValue(opened2);
+                    memoryList.get(opened2).setOpen(true);
+                    itemIndex.setValue(opened2);
                     break;
             }
-           // memoryList.setValue(memoryList.getValue());
+            // memoryList.setValue(memoryList.getValue());
         }
         return opened;
     }
 
     private void closeOpened() {
         opened = 0;
-      if(!memoryList.getValue().get(opened1).isSolved())  {memoryList.getValue().get(opened1).setOpen(false);item1.setValue(opened1);}
-        if(!memoryList.getValue().get(opened2).isSolved())   {memoryList.getValue().get(opened2).setOpen(false);item1.setValue(opened2);}
+        if (!memoryList.get(opened1).isSolved()) {
+            memoryList.get(opened1).setOpen(false);
+            itemIndex.setValue(opened1);
+        }
+        if (!memoryList.get(opened2).isSolved()) {
+            memoryList.get(opened2).setOpen(false);
+            itemIndex.setValue(opened2);
+        }
         opened1 = -1;
         opened2 = -1;
-       // memoryList.setValue(memoryList.getValue());
+        // memoryList.setValue(memoryList.getValue());
     }
 
 
     private int checkIsSolved() {
         memoryResult.increaseCurrentMoves();
-        if (memoryList.getValue().get(opened1).getItem() == memoryList.getValue().get(opened2).getItem()) {
-            memoryList.getValue().get(opened1).setSolved(true);item1.setValue(opened1);
-            memoryList.getValue().get(opened2).setSolved(true);item1.setValue(opened2);
-         //   memoryList.setValue(memoryList.getValue());
+        if (memoryList.get(opened1).getItem() == memoryList.get(opened2).getItem()) {
+            memoryList.get(opened1).setSolved(true);
+            itemIndex.setValue(opened1);
+            memoryList.get(opened2).setSolved(true);
+            itemIndex.setValue(opened2);
+            //   memoryList.setValue(memoryList.getValue());
             memoryResult.increaseSolved();
         }
         return memoryResult.getSolved();
