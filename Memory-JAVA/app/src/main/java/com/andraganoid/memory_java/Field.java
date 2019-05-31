@@ -1,9 +1,5 @@
 package com.andraganoid.memory_java;
 
-import android.view.View;
-import android.view.ViewGroup;
-
-import androidx.databinding.BindingAdapter;
 
 public class Field {
 
@@ -11,15 +7,13 @@ public class Field {
     private boolean solved;
     private boolean open;
     private int index;
-    private int itemHeight;
 
 
-    public Field(int item, int index, int itemHeight) {
+    public Field(int item, int index) {
         this.item = item;
         this.solved = false;
         this.open = false;
         this.index = index;
-        this.itemHeight = itemHeight;
     }
 
 
@@ -47,15 +41,4 @@ public class Field {
         return index;
     }
 
-    public int getItemHeight() {
-        return itemHeight;
-
-    }
-
-    @BindingAdapter("my_layout_height")
-    public static void setLayoutHeight(View view, int height) {
-        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-        layoutParams.height = height;
-        view.setLayoutParams(layoutParams);
-    }
 }

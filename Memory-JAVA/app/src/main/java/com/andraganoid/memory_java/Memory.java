@@ -15,14 +15,11 @@ import android.widget.Toast;
 
 import com.andraganoid.memory_java.databinding.MemoryBinding;
 
-import java.util.List;
-
 
 public class Memory extends AppCompatActivity implements ClickHandler {
 
     private MemoryViewModel memoryViewModel;
     private MemoryAdapter mAdapter;
-    boolean isSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +29,8 @@ public class Memory extends AppCompatActivity implements ClickHandler {
         DisplayMetrics dm = new DisplayMetrics();
         display.getMetrics(dm);
 
-        isSet = false;
-
         memoryViewModel = ViewModelProviders.of(this).get(MemoryViewModel.class);
-        memoryViewModel.itemHeight = (int) (dm.heightPixels * .12);
+        memoryViewModel.itemHeight.set((int) (dm.heightPixels * .12));
         MemoryBinding binding = DataBindingUtil.setContentView(this, R.layout.memory);
 
         binding.setResult(memoryViewModel.memoryResult);
@@ -43,41 +38,24 @@ public class Memory extends AppCompatActivity implements ClickHandler {
 
         RecyclerView recView = findViewById(R.id.memoryRecView);
         recView.setLayoutManager(new GridLayoutManager(this, 4));
-        mAdapter = new MemoryAdapter(this);
+        mAdapter = new MemoryAdapter(memoryViewModel, this);
         recView.setAdapter(mAdapter);
-
 
         memoryViewModel.getItemIndex().observe(this, new Observer<Integer>() {
             @Override
-            public void onChanged(Integer item1) {
-
-                mAdapter.notifyItemChanged(item1);
+            public void onChanged(Integer itemId) {
+                mAdapter.setItem(itemId);
             }
         });
 
 
-//        memoryViewModel.getMemoryList().observe(this, new Observer<List<Field>>() {
-//            @Override
-//            public void onChanged(List<Field> fields) {
-//                if (!isSet) {
-//                    mAdapter.setFields(fields);
-//                    isSet = true;
-//                }
-//            }
-//        });
-
         memoryViewModel.getValueSet().observe(this, new Observer<Boolean>() {
-
-
-
             @Override
             public void onChanged(Boolean isSet) {
                 if (isSet) {
                     mAdapter.setFields(memoryViewModel.getMemoryList());
                 }
             }
-
-
         });
     }
 
@@ -90,7 +68,6 @@ public class Memory extends AppCompatActivity implements ClickHandler {
 
     @Override
     public void onFieldClicked(int id) {
-        Toast.makeText(this, "CLICK", Toast.LENGTH_SHORT).show();
         memoryViewModel.onFieldClicked(id);
     }
 }

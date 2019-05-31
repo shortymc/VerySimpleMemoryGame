@@ -1,7 +1,6 @@
 package com.andraganoid.memory_java;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -17,12 +16,12 @@ import java.util.List;
 public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.ViewHolder> {
     private List<Field> fList;
     private ClickHandler click;
+    private MemoryViewModel viewModel;
 
-    MemoryAdapter(ClickHandler click) {
+    MemoryAdapter(MemoryViewModel viewModel, ClickHandler click) {
         this.click = click;
-        //setFields(fList);
-      this.fList = new ArrayList<>();
-
+        this.fList = new ArrayList<>();
+        this.viewModel = viewModel;
     }
 
     void setFields(List<Field> fList) {
@@ -30,8 +29,8 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.ViewHolder
         notifyDataSetChanged();
     }
 
-    void SetItems(int item1, int item2){
-
+    public void setItem(int id) {
+        notifyItemChanged(id);
     }
 
     @Override
@@ -57,13 +56,14 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.ViewHolder
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         FieldRowBinding binding;
 
-        public ViewHolder(@NonNull FieldRowBinding binding) {
+        ViewHolder(@NonNull FieldRowBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
             binding.setClick(click);
+            binding.setViewModel(viewModel);
         }
 
         void bind(Field field) {

@@ -40,18 +40,6 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/best_moves" />
 
-        <!--<GridView-->
-        <!--android:id="@+id/fields_grid_view"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:horizontalSpacing="4dp"-->
-        <!--android:numColumns="4"-->
-        <!--android:padding="4dp"-->
-        <!--android:verticalSpacing="4dp"-->
-        <!--app:layout_constraintBottom_toTopOf="@+id/current_moves"-->
-        <!--app:layout_constraintHeight_percent="60"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/best_time" />-->
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/memoryRecView"
             android:layout_width="match_parent"

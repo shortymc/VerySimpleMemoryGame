@@ -8,5 +8,7 @@
     <string name="new_best_time">NEW BEST TIME!</string>
     <string name="new_best_moves">NEW BEST MOVES!</string>
     <string name="game_over">GAME OVER!</string>
+    <string name="best_moves_key">bestMoves</string>
+    <string name="best_time_key">bestTime</string>
 
 </resources>

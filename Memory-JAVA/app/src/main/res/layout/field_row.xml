@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:bind="http://schemas.android.com/tools">
+<layout>
 
     <data>
 
@@ -13,28 +13,31 @@
         <variable
             name="click"
             type="com.andraganoid.memory_java.ClickHandler" />
+
+        <variable
+            name="viewModel"
+            type="com.andraganoid.memory_java.MemoryViewModel" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+        my_layout_height="@{viewModel.itemHeight}"
         android:layout_width="match_parent"
-        my_layout_height="@{field.itemHeight}"
-        android:background="@drawable/field_stroke"
-
-        android:orientation="vertical"
-        android:padding="2dp"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp">
+        android:layout_margin="4dp"
+        android:background="@drawable/field_stroke"
+        android:orientation="vertical"
+        android:padding="1dp">
 
         <TextView
             android:id="@+id/field_item"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
             android:layout_margin="1dp"
-            android:background="@{field.solved ? @color/colorAccent : @color/colorWhite}"
+            android:background="@{field.solved ? @color/colorAccent : 0}"
+            android:gravity="center"
+            android:padding="1dp"
             android:text="@{``+field.item}"
-            android:textSize="@{field.itemHeight/2}"
+            android:textSize="@{viewModel.itemHeight/2}"
             android:visibility="@{field.open || field.solved ? View.VISIBLE :View.GONE}" />
 
         <ImageView
@@ -43,6 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:onClick="@{() -> click.onFieldClicked(field.index)}"
+            android:padding="1dp"
             android:src="@drawable/andraganoid"
             android:visibility="@{field.open || field.solved ? View.GONE :View.VISIBLE}" />
 

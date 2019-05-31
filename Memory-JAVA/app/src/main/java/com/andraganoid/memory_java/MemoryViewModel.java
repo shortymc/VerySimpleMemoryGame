@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ObservableBoolean;
+import androidx.databinding.ObservableInt;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -22,14 +23,11 @@ public class MemoryViewModel extends AndroidViewModel {
 
     Result memoryResult;
     private List<Field> memoryList = new ArrayList<>();
-    //    private MutableLiveData <List <Field>> memoryList;
     public ObservableBoolean btnVisibility = new ObservableBoolean();
     private MutableLiveData<Boolean> valueSet = new MutableLiveData<>();
-
     private MutableLiveData<Integer> itemIndex;
+    public ObservableInt itemHeight = new ObservableInt();
 
-
-    // private List <Field> mList = new ArrayList <>();
     private List<Integer> randFields = new ArrayList<>();
     private final int FIELD_ROWS = 4;
     private final int FIELD_COLS = 4;
@@ -40,11 +38,9 @@ public class MemoryViewModel extends AndroidViewModel {
     private long startTime, currentTime;
     private SharedPreferences prefs;
     private boolean canOpenField;
-    public int itemHeight;
 
     MemoryViewModel(@NonNull Application application) {
         super(application);
-//        memoryList = new MutableLiveData <>();
         valueSet.setValue(false);
         itemIndex = new MutableLiveData<>();
         memoryResult = new Result(0, 0L);
@@ -54,7 +50,6 @@ public class MemoryViewModel extends AndroidViewModel {
         btnVisibility.set(true);
     }
 
-    // LiveData <List <Field>> getMemoryList() {
     List<Field> getMemoryList() {
         return memoryList;
     }
@@ -66,7 +61,6 @@ public class MemoryViewModel extends AndroidViewModel {
     LiveData<Boolean> getValueSet() {
         return valueSet;
     }
-
 
     public void newGame() {
         btnVisibility.set(false);
@@ -88,18 +82,16 @@ public class MemoryViewModel extends AndroidViewModel {
         for (int i = 0; i < FIELD_ROWS; i++) {
             for (int j = 0; j < FIELD_COLS; j++) {
                 index = i * FIELD_ROWS + j;
-                memoryList.add(new Field(randFields.get(index), index, itemHeight));
+                memoryList.add(new Field(randFields.get(index), index));
             }
         }
 
-        //  memoryList.setValue(mList);
         valueSet.setValue(true);
-        memoryResult.setBestMoves(prefs.getInt("bestMoves", 100));
-        memoryResult.setBestTime(prefs.getLong("bestTime", 1000 * 1000L));
+        memoryResult.setBestMoves(prefs.getInt(getApplication().getString(R.string.best_moves_key), 100));
+        memoryResult.setBestTime(prefs.getLong(getApplication().getString(R.string.best_time_key), 1000 * 1000L));
         currentTime = 0;
         startTime = SystemClock.uptimeMillis();
         handler.postDelayed(stopwatch, 0);
-
     }
 
     public void onFieldClicked(int id) {
@@ -110,13 +102,14 @@ public class MemoryViewModel extends AndroidViewModel {
             if (whatIsOpen(id) == 2) {
 
                 if (checkIsSolved() == ALL_SOLVED) {
+
                     stopStopwatch();
                     btnVisibility.set(true);
-                    if (memoryResult.getCurrentMoves() < prefs.getInt("bestMoves", 100)) {
+                    if (memoryResult.getCurrentMoves() < prefs.getInt(getApplication().getString(R.string.best_moves_key), 100)) {
                         prefs.edit().putInt("bestMoves", memoryResult.getCurrentMoves()).apply();
                         Toast.makeText(getApplication(), getApplication().getString(R.string.new_best_moves), Toast.LENGTH_LONG).show();
                     }
-                    if (currentTime < prefs.getLong("bestTime", 1000 * 1000L)) {
+                    if (currentTime < prefs.getLong(getApplication().getString(R.string.best_time_key), 1000 * 1000L)) {
                         prefs.edit().putLong("bestTime", currentTime).apply();
                         Toast.makeText(getApplication(), getApplication().getString(R.string.new_best_time), Toast.LENGTH_LONG).show();
                     }
@@ -143,7 +136,6 @@ public class MemoryViewModel extends AndroidViewModel {
     private int whatIsOpen(int id) {
 
         if (!memoryList.get(id).isSolved() && !memoryList.get(id).isOpen()) {
-            //  if (!field.isSolved() && !field.isOpen()) {
             opened = opened == 1 ? 2 : 1;
             switch (opened) {
                 case 1:
@@ -158,7 +150,6 @@ public class MemoryViewModel extends AndroidViewModel {
                     itemIndex.setValue(opened2);
                     break;
             }
-            // memoryList.setValue(memoryList.getValue());
         }
         return opened;
     }
@@ -175,7 +166,6 @@ public class MemoryViewModel extends AndroidViewModel {
         }
         opened1 = -1;
         opened2 = -1;
-        // memoryList.setValue(memoryList.getValue());
     }
 
 
@@ -186,7 +176,6 @@ public class MemoryViewModel extends AndroidViewModel {
             itemIndex.setValue(opened1);
             memoryList.get(opened2).setSolved(true);
             itemIndex.setValue(opened2);
-            //   memoryList.setValue(memoryList.getValue());
             memoryResult.increaseSolved();
         }
         return memoryResult.getSolved();
