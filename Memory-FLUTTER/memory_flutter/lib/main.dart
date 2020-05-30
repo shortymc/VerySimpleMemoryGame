@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:memory_flutter/memory_game.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:memory_flutter/memory_game.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final int FIELDS_NUMBER = 16;
 final int FIELD_ROWS = 4;
@@ -21,6 +22,7 @@ void main() {
 }
 
 _getPrefs() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await SharedPreferences.getInstance().then((SharedPreferences sp) {
     prefs = sp;
     runApp(MemoryMain());
@@ -77,7 +79,7 @@ class _MemoryState extends State<Memory> with WidgetsBindingObserver {
         btnVisibility = true;
         setState(() {});
         break;
-      case AppLifecycleState.suspending:
+      case AppLifecycleState.detached:
         break;
     }
   }

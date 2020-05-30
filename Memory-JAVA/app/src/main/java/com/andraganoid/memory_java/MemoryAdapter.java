@@ -1,16 +1,16 @@
 package com.andraganoid.memory_java;
 
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
+        import android.view.LayoutInflater;
+        import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.RecyclerView;
+        import androidx.annotation.NonNull;
+        import androidx.databinding.DataBindingUtil;
+        import androidx.recyclerview.widget.RecyclerView;
 
-import com.andraganoid.memory_java.databinding.FieldRowBinding;
+        import com.andraganoid.memory_java.databinding.FieldRowBinding;
 
-import java.util.ArrayList;
-import java.util.List;
+        import java.util.ArrayList;
+        import java.util.List;
 
 
 public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.ViewHolder> {
