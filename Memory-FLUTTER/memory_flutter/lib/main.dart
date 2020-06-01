@@ -5,9 +5,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:memory_flutter/memory_game.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final int FIELDS_NUMBER = 16;
-final int FIELD_ROWS = 4;
-final int FIELD_COLS = 4;
+const int FIELDS_NUMBER = 16;
+const int FIELD_ROWS = 4;
+const int FIELD_COLS = 4;
 List<Field> fieldsList;
 bool clickable = false;
 bool btnVisibility = true;
@@ -17,9 +17,7 @@ SharedPreferences prefs;
 var result;
 var open;
 
-void main() {
-  _getPrefs();
-}
+void main() => _getPrefs();
 
 _getPrefs() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,24 +31,23 @@ class MemoryMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Memory-FLUTTER",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: Memory(),
+      home: MemoryState(),
     );
   }
 }
 
-class Memory extends StatefulWidget {
-  Memory({Key key}) : super(key: key);
-
+class MemoryState extends StatefulWidget {
   @override
   _MemoryState createState() => _MemoryState();
 }
 
-class _MemoryState extends State<Memory> with WidgetsBindingObserver {
+class _MemoryState extends State<MemoryState> with WidgetsBindingObserver {
+  _MemoryState createState() => _MemoryState();
+
   @override
   void initState() {
     super.initState();
@@ -104,29 +101,36 @@ class _MemoryState extends State<Memory> with WidgetsBindingObserver {
 
   _stopwatch() {
     var start = DateTime.now().millisecondsSinceEpoch;
-    Timer.periodic(Duration(milliseconds: 1000), (timer) {
-      stopwatch = timer;
-      result.currentTime = DateTime.now().millisecondsSinceEpoch - start;
-      setState(() {});
-    });
+    Timer.periodic(
+      Duration(milliseconds: 1000),
+      (timer) {
+        stopwatch = timer;
+        result.currentTime = DateTime.now().millisecondsSinceEpoch - start;
+        setState(() {});
+      },
+    );
   }
 
   @override
-  Widget build(BuildContext context) {
+  Scaffold build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Memory-FLUTTER"),
+      appBar: AppBar(
+        title: Text("Memory-FLUTTER"),
+      ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 6),
+        child: Column(
+          children: <Widget>[
+            _setRow("Best moves: ", result.bestMoves),
+            _setRow("Best time: ", result.bestTime ~/ 1000),
+            _setTable(),
+            _setRow("Current moves: ", result.currentMoves),
+            _setRow("Current time: ", result.currentTime ~/ 1000),
+            _setButton()
+          ],
         ),
-        body: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 6),
-            child: Column(children: <Widget>[
-              _setRow("Best moves: ", result.bestMoves),
-              _setRow("Best time: ", result.bestTime ~/ 1000),
-              _setTable(),
-              _setRow("Current moves: ", result.currentMoves),
-              _setRow("Current time: ", result.currentTime ~/ 1000),
-              _setButton()
-            ])));
+      ),
+    );
   }
 
   _newGameBtn() {
@@ -136,43 +140,46 @@ class _MemoryState extends State<Memory> with WidgetsBindingObserver {
     _stopwatch();
   }
 
-  Widget _setButton() {
+  Visibility _setButton() {
     return Visibility(
-        visible: btnVisibility,
-        child: new SizedBox(
-            width: double.infinity,
-            child: MaterialButton(
-              onPressed: _newGameBtn,
-              color: Colors.green,
-              child: Text("New game"),
-            )));
+      visible: btnVisibility,
+      child: new SizedBox(
+        width: double.infinity,
+        child: MaterialButton(
+          onPressed: _newGameBtn,
+          color: Colors.green,
+          child: Text("New game"),
+        ),
+      ),
+    );
   }
 
-  Widget _setRow(txt, val) {
+  Row _setRow(txt, val) {
     return Row(
       children: <Widget>[_setText(txt), _setText(val.toString())],
     );
   }
 
-  Widget _setText(txt) {
+  Padding _setText(txt) {
     return Padding(
-        padding: EdgeInsets.symmetric(vertical: 6),
-        child: Text(
-          txt,
-          style: TextStyle(fontSize: 20),
-        ));
+      padding: EdgeInsets.symmetric(vertical: 6),
+      child: Text(
+        txt,
+        style: TextStyle(fontSize: 20),
+      ),
+    );
   }
 
-  Widget _setTable() {
+  Expanded _setTable() {
     return Expanded(
-        child: Column(
-      children: _getItemRows(),
-    ));
+      child: Column(
+        children: _getItemRows(),
+      ),
+    );
   }
 
   List<Widget> _getItemRows() {
     List<Widget> itemRows = List(FIELD_ROWS);
-
     for (var i = 0; i < FIELD_ROWS; i++) {
       itemRows[i] = Row(children: _getItemCols(i));
     }
@@ -181,46 +188,47 @@ class _MemoryState extends State<Memory> with WidgetsBindingObserver {
 
   List<Widget> _getItemCols(row) {
     List<Widget> itemCols = List(FIELD_COLS);
-
     for (var j = 0; j < FIELD_COLS; j++) {
       itemCols[j] = _getItem(row * FIELD_ROWS + j);
     }
     return itemCols;
   }
 
-  Widget _getItem(indx) {
+  Expanded _getItem(indx) {
     var itm = fieldsList[indx];
     return Expanded(
-        child: GestureDetector(
-            onTap: () {
-              _itemClicked(indx);
-            },
-            child: Container(
-              margin: EdgeInsets.all(2),
-              decoration: BoxDecoration(
-                  border: Border.all(width: 3),
-                  borderRadius: BorderRadius.all(Radius.circular(16))),
-              height: MediaQuery.of(context).size.height * 0.12,
-              child: IndexedStack(
-                index: itm.open || itm.solved ? 1 : 0,
-                //    index: 1,
-                children: <Widget>[
-                  Align(
-                    child: Image.asset(
-                      'assets/andraganoid.jpg',
-                      alignment: Alignment.center,
-                    ),
-                  ),
-                  Align(
-                    child: Text(
-                      itm.item.toString(),
-                      style: TextStyle(fontSize: 40),
-                    ),
-                    alignment: Alignment.center,
-                  ),
-                ],
+      child: GestureDetector(
+        onTap: () {
+          _itemClicked(indx);
+        },
+        child: Container(
+          margin: EdgeInsets.all(2),
+          decoration: BoxDecoration(
+              border: Border.all(width: 3),
+              borderRadius: BorderRadius.all(Radius.circular(16))),
+          height: MediaQuery.of(context).size.height * 0.12,
+          child: IndexedStack(
+            index: itm.open || itm.solved ? 1 : 0,
+            //    index: 1,
+            children: <Widget>[
+              Align(
+                child: Image.asset(
+                  'assets/andraganoid.jpg',
+                  alignment: Alignment.center,
+                ),
               ),
-            )));
+              Align(
+                child: Text(
+                  itm.item.toString(),
+                  style: TextStyle(fontSize: 40),
+                ),
+                alignment: Alignment.center,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   void _itemClicked(indx) {
@@ -247,12 +255,15 @@ class _MemoryState extends State<Memory> with WidgetsBindingObserver {
             clickable = false;
             var f = open.first;
             var s = open.second;
-            Timer(Duration(seconds: 1), () {
-              fieldsList[f].open = false;
-              fieldsList[s].open = false;
-              clickable = true;
-              setState(() {});
-            });
+            Timer(
+              Duration(seconds: 1),
+              () {
+                fieldsList[f].open = false;
+                fieldsList[s].open = false;
+                clickable = true;
+                setState(() {});
+              },
+            );
           }
           open.first = -1;
           open.second = -1;
